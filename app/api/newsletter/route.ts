@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const { error } = await supabase
     .from("newsletter_subscribers")
-    .upsert({ email }, { onConflict: "email" });
+    .upsert({ email } as never, { onConflict: "email" });
 
   if (error) {
     console.error(error);

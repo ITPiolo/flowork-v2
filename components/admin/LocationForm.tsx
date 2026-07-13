@@ -31,9 +31,9 @@ export default function LocationForm({ location }: { location?: Location }) {
     };
 
     if (location) {
-      await supabase.from("locations").update(payload).eq("id", location.id);
+      await supabase.from("locations").update(payload as never).eq("id", location.id);
     } else {
-      await supabase.from("locations").insert(payload);
+      await supabase.from("locations").insert(payload as never);
     }
 
     setSaving(false);

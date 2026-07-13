@@ -10,7 +10,7 @@ export default function EnquiryRow({ enquiry }: { enquiry: Enquiry }) {
   async function updateStatus(next: Enquiry["status"]) {
     setStatus(next);
     const supabase = createClient();
-    await supabase.from("enquiries").update({ status: next }).eq("id", enquiry.id);
+    await supabase.from("enquiries").update({ status: next } as never).eq("id", enquiry.id);
   }
 
   return (

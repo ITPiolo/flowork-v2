@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rateLimit";
+import type { Enquiry } from "@/lib/supabase/types";
 
 export async function POST(req: Request) {
   const ip =
@@ -25,8 +26,7 @@ export async function POST(req: Request) {
     }
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.from("enquiries").insert({
+  const payload: Partial<Enquiry> = {
     service: body.service,
     full_name: body.full_name,
     email: body.email,
@@ -34,7 +34,10 @@ export async function POST(req: Request) {
     company_name: body.company_name || null,
     people_count: body.people_count,
     location: body.location,
-  });
+  };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("enquiries").insert(payload as never);
 
   if (error) {
     console.error(error);

@@ -28,9 +28,9 @@ export default function PricingForm({ pkg }: { pkg?: PricingPackage }) {
     };
 
     if (pkg) {
-      await supabase.from("pricing_packages").update(payload).eq("id", pkg.id);
+      await supabase.from("pricing_packages").update(payload as never).eq("id", pkg.id);
     } else {
-      await supabase.from("pricing_packages").insert(payload);
+      await supabase.from("pricing_packages").insert(payload as never);
     }
 
     setSaving(false);

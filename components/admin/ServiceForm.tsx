@@ -31,9 +31,9 @@ export default function ServiceForm({ service }: { service?: Service }) {
     };
 
     if (service) {
-      await supabase.from("services").update(payload).eq("id", service.id);
+      await supabase.from("services").update(payload as never).eq("id", service.id);
     } else {
-      await supabase.from("services").insert(payload);
+      await supabase.from("services").insert(payload as never);
     }
 
     setSaving(false);

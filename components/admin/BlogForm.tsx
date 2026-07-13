@@ -36,9 +36,9 @@ export default function BlogForm({ post }: { post?: BlogPost }) {
     };
 
     if (post) {
-      await supabase.from("blog_posts").update(payload).eq("id", post.id);
+      await supabase.from("blog_posts").update(payload as never).eq("id", post.id);
     } else {
-      await supabase.from("blog_posts").insert(payload);
+      await supabase.from("blog_posts").insert(payload as never);
     }
 
     setSaving(false);
