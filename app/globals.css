@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-charcoal font-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  :focus-visible {
+    outline: 2px solid #C9A876;
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.eyebrow {
+  @apply text-xs tracking-[0.2em] uppercase text-sage-600 font-body font-medium;
+}
+
+/* Vine spine used by ScrollSpine.tsx */
+.spine-path {
+  fill: none;
+  stroke: #7C8A6D;
+  stroke-width: 2;
+  stroke-linecap: round;
+  pathLength: 1;
+}

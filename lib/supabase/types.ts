@@ -1,0 +1,79 @@
+export type Location = {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  hero_image_url: string;
+  offices_count: string;
+  coworking_count: string;
+  meeting_rooms_count: string;
+  phone_booths_count: string;
+  podcast_rooms_count: string;
+  address: string;
+  display_order: number;
+  published: boolean;
+};
+
+export type Service = {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  hero_image_url: string;
+  perks: string[];
+  feature_heading: string;
+  feature_body: string;
+  feature_image_url: string;
+  display_order: number;
+  published: boolean;
+};
+
+export type PricingPackage = {
+  id: string;
+  name: string;
+  price_aed: number;
+  billing_period: string;
+  features: string[];
+  featured: boolean;
+  display_order: number;
+};
+
+export type BlogPost = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  cover_image_url: string;
+  category: string;
+  published_at: string;
+  published: boolean;
+};
+
+export type Enquiry = {
+  id: string;
+  created_at: string;
+  service: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  company_name: string | null;
+  people_count: string;
+  location: string;
+  status: "new" | "contacted" | "closed";
+};
+
+// Minimal Database type — expand with generated types via
+// `supabase gen types typescript` once the project is linked.
+export type Database = {
+  public: {
+    Tables: {
+      locations: { Row: Location; Insert: Partial<Location>; Update: Partial<Location> };
+      services: { Row: Service; Insert: Partial<Service>; Update: Partial<Service> };
+      pricing_packages: { Row: PricingPackage; Insert: Partial<PricingPackage>; Update: Partial<PricingPackage> };
+      blog_posts: { Row: BlogPost; Insert: Partial<BlogPost>; Update: Partial<BlogPost> };
+      enquiries: { Row: Enquiry; Insert: Partial<Enquiry>; Update: Partial<Enquiry> };
+    };
+  };
+};
