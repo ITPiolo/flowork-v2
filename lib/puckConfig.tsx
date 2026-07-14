@@ -1,6 +1,7 @@
 import type { Config } from "@measured/puck";
 import Image from "next/image";
 import Link from "next/link";
+import PuckImageField from "@/components/admin/PuckImageField";
 
 // Defines every block your client can drag onto the canvas in the
 // custom page builder (/admin/pages). Composite blocks (Hero, TextImage,
@@ -84,6 +85,14 @@ const widthField = {
   ],
 };
 
+const imageField = (label: string) => ({
+  type: "custom" as const,
+  label,
+  render: ({ value, onChange }: { value?: string; onChange: (v: string) => void }) => (
+    <PuckImageField value={value} onChange={onChange} />
+  ),
+});
+
 export const puckConfig: Config = {
   categories: {
     sections: {
@@ -102,7 +111,7 @@ export const puckConfig: Config = {
       fields: {
         heading: { type: "text" },
         subheading: { type: "textarea" },
-        imageUrl: { type: "text", label: "Background image URL" },
+        imageUrl: imageField("Background image"),
         buttonLabel: { type: "text" },
         buttonHref: { type: "text" },
         align: alignField,
@@ -156,7 +165,7 @@ export const puckConfig: Config = {
       fields: {
         heading: { type: "text" },
         body: { type: "textarea" },
-        imageUrl: { type: "text", label: "Image URL" },
+        imageUrl: imageField("Image"),
         imagePosition: {
           type: "select",
           options: [
@@ -200,7 +209,7 @@ export const puckConfig: Config = {
         images: {
           type: "array",
           arrayFields: {
-            url: { type: "text", label: "Image URL" },
+            url: imageField("Image"),
             caption: { type: "text" },
           },
           getItemSummary: (item) => item.caption || "Image",
@@ -379,7 +388,7 @@ export const puckConfig: Config = {
 
     ImageBlock: {
       fields: {
-        url: { type: "text", label: "Image URL" },
+        url: imageField("Image"),
         aspect: aspectField,
         width: widthField,
       },
