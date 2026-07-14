@@ -8,6 +8,7 @@ import type { Location } from "@/lib/supabase/types";
 export default function LocationForm({ location }: { location?: Location }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,6 +42,21 @@ export default function LocationForm({ location }: { location?: Location }) {
     router.refresh();
   }
 
+  async function handleDelete() {
+    if (!location) return;
+    const confirmed = window.confirm(
+      `Delete "${location.name}"? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    const supabase = createClient();
+    await supabase.from("locations").delete().eq("id", location.id);
+    setDeleting(false);
+    router.push("/admin/locations");
+    router.refresh();
+  }
+
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-4 bg-white rounded-xl border border-charcoal/10 p-6">
       <Row label="Slug (URL)"><input name="slug" defaultValue={location?.slug} required className="input" /></Row>
@@ -60,9 +76,23 @@ export default function LocationForm({ location }: { location?: Location }) {
         <input type="checkbox" name="published" defaultChecked={location?.published ?? true} />
         Published
       </label>
-      <button disabled={saving} className="rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium disabled:opacity-60">
-        {saving ? "Saving..." : "Save location"}
-      </button>
+
+      <div className="flex items-center gap-3 pt-2">
+        <button disabled={saving} className="rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium disabled:opacity-60">
+          {saving ? "Saving..." : "Save location"}
+        </button>
+
+        {location && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="rounded-full border border-red-300 text-red-600 px-5 py-2.5 text-sm font-medium hover:bg-red-50 disabled:opacity-60"
+          >
+            {deleting ? "Deleting..." : "Delete location"}
+          </button>
+        )}
+      </div>
 
       <style jsx global>{`
         .input {
