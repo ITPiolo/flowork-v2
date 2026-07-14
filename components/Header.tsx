@@ -4,30 +4,31 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
+import type { Location } from "@/lib/supabase/types";
 
-const nav = [
-  { label: "Home", href: "/" },
-  {
-    label: "Locations",
-    href: "/locations",
-    children: [
-      { label: "Dubai Hills", href: "/locations/dubai-hills" },
-      { label: "Vision Tower, Business Bay", href: "/locations/vision-tower-business-bay" },
-    ],
-  },
-  { label: "Private Office", href: "/services/private-office" },
-  { label: "Coworking", href: "/services/coworking" },
-  { label: "Meeting Room", href: "/services/meeting-room" },
-  {
-    label: "Virtual Office",
-    href: "/services/virtual-office",
-    children: [{ label: "Ejari Packages", href: "/ejari" }],
-  },
-  { label: "Podcast Room", href: "/services/podcast-room" },
-];
-
-export default function Header() {
+export default function Header({ locations }: { locations: Location[] }) {
   const [open, setOpen] = useState(false);
+
+  const nav = [
+    { label: "Home", href: "/" },
+    {
+      label: "Locations",
+      href: "/locations",
+      children: locations.map((l) => ({
+        label: l.name,
+        href: `/locations/${l.slug}`,
+      })),
+    },
+    { label: "Private Office", href: "/services/private-office" },
+    { label: "Coworking", href: "/services/coworking" },
+    { label: "Meeting Room", href: "/services/meeting-room" },
+    {
+      label: "Virtual Office",
+      href: "/services/virtual-office",
+      children: [{ label: "Ejari Packages", href: "/ejari" }],
+    },
+    { label: "Podcast Room", href: "/services/podcast-room" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-charcoal/5">
@@ -45,9 +46,9 @@ export default function Header() {
                 className="flex items-center gap-1 text-sm text-charcoal/80 hover:text-sage-600 transition-colors"
               >
                 {item.label}
-                {item.children && <ChevronDown size={14} />}
+                {item.children && item.children.length > 0 && <ChevronDown size={14} />}
               </Link>
-              {item.children && (
+              {item.children && item.children.length > 0 && (
                 <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <div className="bg-white shadow-lg rounded-lg py-2 min-w-[220px] border border-charcoal/5">
                     {item.children.map((child) => (

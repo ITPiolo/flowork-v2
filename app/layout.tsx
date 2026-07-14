@@ -6,6 +6,9 @@ import Footer from "@/components/Footer";
 import ScrollSpine from "@/components/ScrollSpine";
 import PageTransition from "@/components/PageTransition";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SmoothScroll from "@/components/SmoothScroll";
+import { createClient } from "@/lib/supabase/server";
+import type { Location } from "@/lib/supabase/types";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -33,16 +36,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const { data: locations } = await supabase
+    .from("locations")
+    .select("*")
+    .order("display_order");
+
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
+        <SmoothScroll />
         <ScrollSpine />
-        <Header />
+        <Header locations={(locations ?? []) as Location[]} />
         <main>
           <PageTransition>{children}</PageTransition>
         </main>
