@@ -64,6 +64,17 @@ export type Enquiry = {
   status: "new" | "contacted" | "closed";
 };
 
+export type CustomPage = {
+  id: string;
+  slug: string;
+  title: string;
+  meta_description: string | null;
+  content: any; // Puck's page data (JSON)
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 // Minimal Database type — expand with generated types via
 // `supabase gen types typescript` once the project is linked.
 export type Database = {
@@ -74,6 +85,7 @@ export type Database = {
       pricing_packages: { Row: PricingPackage; Insert: Partial<PricingPackage>; Update: Partial<PricingPackage> };
       blog_posts: { Row: BlogPost; Insert: Partial<BlogPost>; Update: Partial<BlogPost> };
       enquiries: { Row: Enquiry; Insert: Partial<Enquiry>; Update: Partial<Enquiry> };
+      custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };
 };
