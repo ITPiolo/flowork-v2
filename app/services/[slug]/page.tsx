@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import EnquiryForm from "@/components/EnquiryForm";
 import ServiceCard from "@/components/ServiceCard";
+import VirtualTourButton from "@/components/VirtualTourButton";
 import type { Service } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -173,9 +174,17 @@ export default async function ServicePage({
           </section>
 
           <section className="max-w-content mx-auto px-6 lg:px-8 py-16 grid md:grid-cols-2 gap-10">
-            <Reveal>
-              <h2 className="font-display text-2xl">The perks of {service.name.toLowerCase()}</h2>
-            </Reveal>
+        <Reveal>
+          <h2 className="font-display text-2xl">The perks of {service.name.toLowerCase()}</h2>
+          {(slug === "meeting-room" || slug === "podcast-room") && (
+            <div className="mt-6">
+              <VirtualTourButton
+                startScene={slug === "meeting-room" ? "meeting" : "podcast"}
+                className="inline-flex items-center rounded-full bg-sage-500 text-cream px-6 py-3 text-sm font-medium hover:bg-sage-600 transition-colors"
+              />
+            </div>
+          )}
+        </Reveal>
             <Reveal delay={0.1}>
               <ul className="space-y-3">
                 {service.perks.map((perk) => (
