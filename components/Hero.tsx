@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import AnimatedStat from "@/components/AnimatedStat";
+import VirtualTourButton from "@/components/VirtualTourButton";
 
 const STATS = [
   { value: "130+", label: "Offices across Dubai" },
@@ -23,7 +24,7 @@ export default function Hero() {
           className="absolute inset-0"
         >
           <Image
-            src="/images/Co-Working-02-Copy.jpg"
+            src="/images/hero-workspace.jpg"
             alt="flowork workspace"
             fill
             priority
@@ -78,6 +79,7 @@ export default function Hero() {
             >
               Explore Locations
             </Link>
+            <VirtualTourButton />
           </motion.div>
         </div>
       </div>

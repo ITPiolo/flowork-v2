@@ -9,6 +9,7 @@ import TrustSection from "@/components/TrustSection";
 import Testimonials from "@/components/Testimonials";
 import BlogPreview from "@/components/BlogPreview";
 import type { Service, BlogPost } from "@/lib/supabase/types";
+"use client";
 
 export const revalidate = 60;
 
