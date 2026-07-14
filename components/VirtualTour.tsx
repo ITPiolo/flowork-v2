@@ -4,36 +4,26 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 // Ported from the reference build's Pannellum-based 360° tour.
-// Pannellum is a free, open-source panorama viewer (github.com/mpetroff/pannellum) —
-// nothing proprietary here, just needs its script + CSS and real equirectangular photos.
+// Pannellum is a free, open-source panorama viewer (github.com/mpetroff/pannellum).
+//
+// Currently live with 2 real flowork panoramas (Boardroom, Podcast Room).
+// Add more scenes to TOUR_SCENES/TOUR_LINKS/TOUR_IMAGES as more rooms are shot.
 
 type Scene = { id: string; name: string };
 
 const TOUR_SCENES: Scene[] = [
-  { id: "reception", name: "Reception" },
-  { id: "coworking", name: "Coworking Floor" },
-  { id: "office", name: "Private Office" },
   { id: "meeting", name: "Boardroom" },
-  { id: "lounge", name: "Community Lounge" },
+  { id: "podcast", name: "Podcast Room" },
 ];
 
 const TOUR_LINKS: Record<string, [string, number][]> = {
-  reception: [["coworking", 25], ["lounge", -135]],
-  coworking: [["office", 30], ["reception", 165]],
-  office: [["meeting", 15], ["coworking", 170]],
-  meeting: [["lounge", 25], ["office", -160]],
-  lounge: [["reception", 40], ["meeting", -150]],
+  meeting: [["podcast", 20]],
+  podcast: [["meeting", -160]],
 };
 
-// Map each scene to its panorama image. Swap these for real equirectangular
-// photos as they're shot — until then this will show broken images, which
-// is expected (see README note on 360 photography requirements).
 const TOUR_IMAGES: Record<string, string> = {
-  reception: "/images/tour/reception.jpg",
-  coworking: "/images/tour/coworking.jpg",
-  office: "/images/tour/office.jpg",
-  meeting: "/images/tour/meeting.jpg",
-  lounge: "/images/tour/lounge.jpg",
+  meeting: "/images/tour/boardroom.jpg",
+  podcast: "/images/tour/podcast-room.jpg",
 };
 
 declare global {
@@ -45,7 +35,7 @@ declare global {
 export default function VirtualTour({
   open,
   onClose,
-  startScene = "reception",
+  startScene = "meeting",
 }: {
   open: boolean;
   onClose: () => void;
@@ -55,7 +45,6 @@ export default function VirtualTour({
   const [currentScene, setCurrentScene] = useState(startScene);
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
 
-  // Load Pannellum's script + CSS from CDN once
   useEffect(() => {
     if (window.pannellum) {
       setScriptsLoaded(true);
