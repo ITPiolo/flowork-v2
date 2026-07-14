@@ -24,7 +24,7 @@ export default function Hero() {
           className="absolute inset-0"
         >
           <Image
-            src="/images/Reception-01-rd-1536x1182.jpg
+            src="/images/Reception-01-rd-1536x1182.jpg"
             alt="flowork workspace"
             fill
             priority
