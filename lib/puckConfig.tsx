@@ -3,9 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Defines every block your client can drag onto the canvas in the
-// custom page builder (/admin/pages). Each block includes styling
-// controls (alignment, size, color) so non-technical editors get
-// real flexibility without needing custom CSS.
+// custom page builder (/admin/pages). Composite blocks (Hero, TextImage,
+// CTA...) are quick page starters. Atomic blocks (Heading, Paragraph,
+// Image, Button, Divider...) are fully independent and can each be
+// dragged, resized, and reordered on their own for true freeform layout.
 
 const HEADING_SIZES: Record<string, string> = {
   sm: "text-2xl md:text-3xl",
@@ -73,8 +74,30 @@ const bgField = {
   ],
 };
 
+const widthField = {
+  type: "select" as const,
+  options: [
+    { label: "Narrow", value: "max-w-xl" },
+    { label: "Medium", value: "max-w-3xl" },
+    { label: "Wide", value: "max-w-5xl" },
+    { label: "Full", value: "max-w-content" },
+  ],
+};
+
 export const puckConfig: Config = {
+  categories: {
+    sections: {
+      title: "Ready-made sections",
+      components: ["Hero", "TextImage", "Gallery", "Testimonial", "CTA", "FAQAccordion", "Stats"],
+    },
+    elements: {
+      title: "Individual elements",
+      components: ["Heading", "Paragraph", "ImageBlock", "ButtonBlock", "Divider", "Spacer", "LogoStrip"],
+    },
+  },
   components: {
+    // ===== SECTIONS (composite, quick starters) =====
+
     Hero: {
       fields: {
         heading: { type: "text" },
@@ -129,35 +152,6 @@ export const puckConfig: Config = {
       },
     },
 
-    RichText: {
-      fields: {
-        content: { type: "textarea" },
-        align: alignField,
-        fontSize: sizeField,
-        maxWidth: {
-          type: "select",
-          options: [
-            { label: "Narrow", value: "max-w-xl" },
-            { label: "Medium", value: "max-w-3xl" },
-            { label: "Wide", value: "max-w-5xl" },
-          ],
-        },
-      },
-      defaultProps: {
-        content: "Write your paragraph here.",
-        align: "left",
-        fontSize: "base",
-        maxWidth: "max-w-3xl",
-      },
-      render: ({ content, align, fontSize, maxWidth }) => (
-        <section className={`${maxWidth} mx-auto px-6 lg:px-8 py-12 ${align === "center" ? "text-center" : ""}`}>
-          <p className={`text-charcoal/75 leading-relaxed whitespace-pre-line ${TEXT_SIZES[fontSize as string] || TEXT_SIZES.base}`}>
-            {content}
-          </p>
-        </section>
-      ),
-    },
-
     TextImage: {
       fields: {
         heading: { type: "text" },
@@ -181,17 +175,24 @@ export const puckConfig: Config = {
         imageAspect: "landscape",
         headingSize: "md",
       },
-      render: ({ heading, body, imageUrl, imagePosition, imageAspect, headingSize }) => (
-        <section className="max-w-content mx-auto px-6 lg:px-8 py-16 grid md:grid-cols-2 gap-12 items-center">
-          <div className={imagePosition === "left" ? "md:order-2" : ""}>
+      render: ({ heading, body, imageUrl, imagePosition, imageAspect, headingSize }) => {
+        const textBlock = (
+          <div key="text">
             <h2 className={`font-display mb-4 ${HEADING_SIZES[headingSize as string] || HEADING_SIZES.md}`}>{heading}</h2>
             <p className="text-charcoal/70 leading-relaxed">{body}</p>
           </div>
-          <div className={`relative rounded-2xl overflow-hidden ${ASPECTS[imageAspect as string] || ASPECTS.landscape} ${imagePosition === "left" ? "md:order-1" : ""}`}>
+        );
+        const imageBlock = (
+          <div key="image" className={`relative rounded-2xl overflow-hidden ${ASPECTS[imageAspect as string] || ASPECTS.landscape}`}>
             <Image src={imageUrl} alt={heading} fill className="object-cover" />
           </div>
-        </section>
-      ),
+        );
+        return (
+          <section className="max-w-content mx-auto px-6 lg:px-8 py-16 grid md:grid-cols-2 gap-12 items-center">
+            {imagePosition === "left" ? [imageBlock, textBlock] : [textBlock, imageBlock]}
+          </section>
+        );
+      },
     },
 
     Gallery: {
@@ -277,6 +278,182 @@ export const puckConfig: Config = {
             {buttonLabel}
           </Link>
         </section>
+      ),
+    },
+
+    Stats: {
+      fields: {
+        stat1Value: { type: "text" },
+        stat1Label: { type: "text" },
+        stat2Value: { type: "text" },
+        stat2Label: { type: "text" },
+        stat3Value: { type: "text" },
+        stat3Label: { type: "text" },
+        stat4Value: { type: "text" },
+        stat4Label: { type: "text" },
+        background: bgField,
+      },
+      defaultProps: {
+        stat1Value: "130+", stat1Label: "Offices across Dubai",
+        stat2Value: "90+", stat2Label: "Coworking spaces",
+        stat3Value: "2", stat3Label: "Prime locations",
+        stat4Value: "1000+", stat4Label: "Businesses served",
+        background: "charcoal",
+      },
+      render: (props: any) => (
+        <section className={BG_VARIANTS[props.background] || BG_VARIANTS.charcoal}>
+          <div className="max-w-content mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 divide-x divide-current/10">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="py-10 text-center">
+                <p className="font-display text-4xl">{props[`stat${n}Value`]}</p>
+                <p className="mt-2 text-sm opacity-70">{props[`stat${n}Label`]}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ),
+    },
+
+    FAQAccordion: {
+      fields: {
+        q1: { type: "text" }, a1: { type: "textarea" },
+        q2: { type: "text" }, a2: { type: "textarea" },
+        q3: { type: "text" }, a3: { type: "textarea" },
+      },
+      defaultProps: {
+        q1: "Question one?", a1: "Answer one.",
+        q2: "Question two?", a2: "Answer two.",
+        q3: "Question three?", a3: "Answer three.",
+      },
+      render: (props: any) => (
+        <section className="max-w-3xl mx-auto px-6 lg:px-8 py-16">
+          <div className="divide-y divide-charcoal/10 border-t border-b border-charcoal/10">
+            {[1, 2, 3].map((n) =>
+              props[`q${n}`] ? (
+                <details key={n} className="py-4 group">
+                  <summary className="cursor-pointer font-display text-lg list-none flex items-center justify-between">
+                    {props[`q${n}`]}
+                    <span className="text-sage-500 group-open:rotate-180 transition-transform">&#9660;</span>
+                  </summary>
+                  <p className="mt-3 text-charcoal/60 leading-relaxed">{props[`a${n}`]}</p>
+                </details>
+              ) : null
+            )}
+          </div>
+        </section>
+      ),
+    },
+
+    // ===== ELEMENTS (atomic, independently movable) =====
+
+    Heading: {
+      fields: {
+        text: { type: "text" },
+        size: sizeField,
+        align: alignField,
+      },
+      defaultProps: { text: "Heading text", size: "md", align: "left" },
+      render: ({ text, size, align }) => (
+        <div className={`max-w-content mx-auto px-6 lg:px-8 ${align === "center" ? "text-center" : "text-left"}`}>
+          <h2 className={`font-display ${HEADING_SIZES[size as string] || HEADING_SIZES.md}`}>{text}</h2>
+        </div>
+      ),
+    },
+
+    Paragraph: {
+      fields: {
+        text: { type: "textarea" },
+        size: sizeField,
+        align: alignField,
+        width: widthField,
+      },
+      defaultProps: { text: "Paragraph text goes here.", size: "base", align: "left", width: "max-w-3xl" },
+      render: ({ text, size, align, width }) => (
+        <div className={`${width} mx-auto px-6 lg:px-8 ${align === "center" ? "text-center" : "text-left"}`}>
+          <p className={`text-charcoal/75 leading-relaxed whitespace-pre-line ${TEXT_SIZES[size as string] || TEXT_SIZES.base}`}>
+            {text}
+          </p>
+        </div>
+      ),
+    },
+
+    ImageBlock: {
+      fields: {
+        url: { type: "text", label: "Image URL" },
+        aspect: aspectField,
+        width: widthField,
+      },
+      defaultProps: { url: "/images/Co-Working-02-Copy.jpg", aspect: "landscape", width: "max-w-5xl" },
+      render: ({ url, aspect, width }) => (
+        <div className={`${width} mx-auto px-6 lg:px-8`}>
+          <div className={`relative rounded-2xl overflow-hidden ${ASPECTS[aspect as string] || ASPECTS.landscape}`}>
+            <Image src={url} alt="" fill className="object-cover" />
+          </div>
+        </div>
+      ),
+    },
+
+    ButtonBlock: {
+      fields: {
+        label: { type: "text" },
+        href: { type: "text" },
+        align: alignField,
+        style: {
+          type: "select",
+          options: [
+            { label: "Filled (sage)", value: "filled" },
+            { label: "Outline", value: "outline" },
+          ],
+        },
+      },
+      defaultProps: { label: "Enquire Now", href: "/#enquire", align: "left", style: "filled" },
+      render: ({ label, href, align, style }) => (
+        <div className={`max-w-content mx-auto px-6 lg:px-8 flex ${align === "center" ? "justify-center" : "justify-start"}`}>
+          <Link
+            href={href || "#"}
+            className={
+              style === "outline"
+                ? "inline-flex items-center rounded-full border border-charcoal/30 text-charcoal px-7 py-3.5 text-sm font-medium hover:bg-charcoal/5 transition-colors"
+                : "inline-flex items-center rounded-full bg-sage-500 text-cream px-7 py-3.5 text-sm font-medium hover:bg-sage-600 transition-colors"
+            }
+          >
+            {label}
+          </Link>
+        </div>
+      ),
+    },
+
+    Divider: {
+      fields: {
+        width: widthField,
+      },
+      defaultProps: { width: "max-w-content" },
+      render: ({ width }) => (
+        <div className={`${width} mx-auto px-6 lg:px-8`}>
+          <hr className="border-charcoal/10" />
+        </div>
+      ),
+    },
+
+    LogoStrip: {
+      fields: {
+        logos: {
+          type: "array",
+          arrayFields: {
+            name: { type: "text" },
+          },
+          getItemSummary: (item) => item.name || "Logo",
+        },
+      },
+      defaultProps: { logos: [] },
+      render: ({ logos }) => (
+        <div className="max-w-content mx-auto px-6 lg:px-8 py-10">
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
+            {(logos || []).map((l: any, i: number) => (
+              <span key={i} className="font-display text-lg text-charcoal/30">{l.name}</span>
+            ))}
+          </div>
+        </div>
       ),
     },
 
