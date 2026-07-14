@@ -7,6 +7,7 @@ import ScrollSpine from "@/components/ScrollSpine";
 import PageTransition from "@/components/PageTransition";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SmoothScroll from "@/components/SmoothScroll";
+import Preloader from "@/components/Preloader";
 import { createClient } from "@/lib/supabase/server";
 import type { Location } from "@/lib/supabase/types";
 
@@ -50,6 +51,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
+        <Preloader />
         <SmoothScroll />
         <ScrollSpine />
         <Header locations={(locations ?? []) as Location[]} />
