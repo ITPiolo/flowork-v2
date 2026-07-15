@@ -14,6 +14,7 @@ const links = [
   { href: "/admin/pricing", label: "Ejari Pricing" },
   { href: "/admin/blog", label: "Blog" },
   { href: "/admin/media", label: "Media Library" },
+  { href: "/admin/proposals", label: "Proposal Library" },
 ];
 
 export default function AdminSidebar() {

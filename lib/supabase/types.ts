@@ -84,6 +84,16 @@ export type CustomPage = {
   updated_at: string;
 };
 
+export type ProposalLibraryItem = {
+  id: string;
+  title: string;
+  category: string;
+  file_url: string;
+  file_name: string;
+  uploaded_by: string | null;
+  created_at: string;
+};
+
 // Minimal Database type — expand with generated types via
 // `supabase gen types typescript` once the project is linked.
 export type Database = {
@@ -95,6 +105,7 @@ export type Database = {
       blog_posts: { Row: BlogPost; Insert: Partial<BlogPost>; Update: Partial<BlogPost> };
       enquiries: { Row: Enquiry; Insert: Partial<Enquiry>; Update: Partial<Enquiry> };
       enquiry_notes: { Row: EnquiryNote; Insert: Partial<EnquiryNote>; Update: Partial<EnquiryNote> };
+      proposal_library: { Row: ProposalLibraryItem; Insert: Partial<ProposalLibraryItem>; Update: Partial<ProposalLibraryItem> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };
