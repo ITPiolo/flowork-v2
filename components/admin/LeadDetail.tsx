@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Enquiry, EnquiryNote } from "@/lib/supabase/types";
+import EmailComposer from "@/components/admin/EmailComposer";
 
 const STAGES: { value: Enquiry["status"]; label: string; color: string }[] = [
   { value: "new", label: "New", color: "bg-charcoal/10 text-charcoal/70" },
@@ -23,7 +24,7 @@ export default function LeadDetail({
   const [notes, setNotes] = useState(initialNotes);
   const [newNote, setNewNote] = useState("");
   const [saving, setSaving] = useState(false);
-
+  const [showComposer, setShowComposer] = useState(false);
   async function updateStage(next: Enquiry["status"]) {
     setStage(next);
     const supabase = createClient();
@@ -124,7 +125,14 @@ export default function LeadDetail({
           </div>
         </div>
       </div>
-
+    
+    {showComposer && (
+        <EmailComposer
+          defaultTo={enquiry.email}
+          defaultSubject={`flowork — ${enquiry.service} enquiry`}
+          onClose={() => setShowComposer(false)}
+        />
+      )}
       <div className="bg-white rounded-xl border border-charcoal/10 p-6 h-fit">
         <h2 className="font-display text-lg mb-4">Pipeline stage</h2>
         <div className="space-y-2">
@@ -140,6 +148,12 @@ export default function LeadDetail({
             </button>
           ))}
         </div>
+        <button
+          onClick={() => setShowComposer(true)}
+          className="w-full mt-4 rounded-lg border border-sage-500 text-sage-600 py-2.5 text-sm font-medium hover:bg-sage-50"
+        >
+          Send email
+        </button>
       </div>
     </div>
   );
