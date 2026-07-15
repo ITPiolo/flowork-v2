@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import BlogTable from "@/components/admin/BlogTable";
 import type { BlogPost } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
@@ -23,23 +24,7 @@ export default async function AdminBlog() {
           + Add post
         </Link>
       </div>
-      <div className="grid gap-4">
-        {posts.map((post) => (
-          <Link
-            key={post.id}
-            href={`/admin/blog/${post.id}`}
-            className="flex items-center justify-between bg-white rounded-xl border border-charcoal/10 p-4 hover:border-sage-300"
-          >
-            <p className="font-medium">{post.title}</p>
-            <span className="text-xs text-charcoal/50">
-              {new Date(post.published_at).toLocaleDateString()}
-            </span>
-          </Link>
-        ))}
-        {posts.length === 0 && (
-          <p className="text-sm text-charcoal/40">No posts yet.</p>
-        )}
-      </div>
+      <BlogTable posts={posts} />
     </div>
   );
 }
