@@ -13,6 +13,7 @@ const links = [
   { href: "/admin/services", label: "Services" },
   { href: "/admin/pricing", label: "Ejari Pricing" },
   { href: "/admin/blog", label: "Blog" },
+  { href: "/admin/integrations", label: "Integrations" },
 ];
 
 export default function AdminSidebar() {
