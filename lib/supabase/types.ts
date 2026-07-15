@@ -61,7 +61,16 @@ export type Enquiry = {
   company_name: string | null;
   people_count: string;
   location: string;
-  status: "new" | "contacted" | "closed";
+  status: "new" | "contacted" | "proposal_sent" | "won" | "lost";
+  source: string;
+};
+
+export type EnquiryNote = {
+  id: string;
+  enquiry_id: string;
+  author_email: string | null;
+  note: string;
+  created_at: string;
 };
 
 export type CustomPage = {
@@ -85,6 +94,7 @@ export type Database = {
       pricing_packages: { Row: PricingPackage; Insert: Partial<PricingPackage>; Update: Partial<PricingPackage> };
       blog_posts: { Row: BlogPost; Insert: Partial<BlogPost>; Update: Partial<BlogPost> };
       enquiries: { Row: Enquiry; Insert: Partial<Enquiry>; Update: Partial<Enquiry> };
+      enquiry_notes: { Row: EnquiryNote; Insert: Partial<EnquiryNote>; Update: Partial<EnquiryNote> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };
