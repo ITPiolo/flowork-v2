@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import type { Enquiry } from "@/lib/supabase/types";
 
 const STAGE_STYLES: Record<string, string> = {
@@ -26,6 +26,8 @@ const STAGE_FILTERS = ["all", "new", "contacted", "proposal_sent", "won", "lost"
 export default function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) {
   const [query, setQuery] = useState("");
   const [stageFilter, setStageFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   const filtered = useMemo(() => {
     return enquiries.filter((e) => {
@@ -35,9 +37,39 @@ export default function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) 
           .filter(Boolean)
           .some((field) => field!.toLowerCase().includes(query.toLowerCase()));
       const matchesStage = stageFilter === "all" || e.status === stageFilter;
-      return matchesQuery && matchesStage;
+      const created = new Date(e.created_at);
+      const matchesFrom = !dateFrom || created >= new Date(dateFrom);
+      const matchesTo = !dateTo || created <= new Date(dateTo + "T23:59:59");
+      return matchesQuery && matchesStage && matchesFrom && matchesTo;
     });
-  }, [enquiries, query, stageFilter]);
+  }, [enquiries, query, stageFilter, dateFrom, dateTo]);
+
+  function exportCsv() {
+    const headers = ["Name", "Email", "Phone", "Company", "Service", "Location", "People", "Stage", "Source", "Received"];
+    const rows = filtered.map((e) => [
+      e.full_name,
+      e.email,
+      e.phone,
+      e.company_name || "",
+      e.service,
+      e.location,
+      e.people_count,
+      STAGE_LABELS[e.status] || e.status,
+      e.source || "website",
+      new Date(e.created_at).toLocaleString(),
+    ]);
+
+    const escapeCell = (cell: string) => `"${String(cell).replace(/"/g, '""')}"`;
+    const csv = [headers, ...rows].map((row) => row.map(escapeCell).join(",")).join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `flowork-enquiries-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <div>
@@ -51,6 +83,27 @@ export default function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) 
             className="w-full pl-9 pr-3 py-2 text-sm border border-charcoal/15 rounded-lg"
           />
         </div>
+        <input
+          type="date"
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
+          className="text-sm border border-charcoal/15 rounded-lg px-3 py-2"
+          title="From date"
+        />
+        <input
+          type="date"
+          value={dateTo}
+          onChange={(e) => setDateTo(e.target.value)}
+          className="text-sm border border-charcoal/15 rounded-lg px-3 py-2"
+          title="To date"
+        />
+        <button
+          onClick={exportCsv}
+          className="flex items-center gap-2 text-sm border border-charcoal/15 rounded-lg px-3 py-2 hover:bg-sage-50"
+        >
+          <Download size={15} />
+          Export CSV
+        </button>
         <div className="flex gap-1 flex-wrap">
           {STAGE_FILTERS.map((s) => (
             <button
