@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/check-renewals?token=REPLACE_WITH_YOUR_CRON_SECRET",
+      "path": "/api/check-renewals?token=flowork-renewal-check-8x92kd",
       "schedule": "0 7 * * *"
     }
   ]

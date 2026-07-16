@@ -71,14 +71,6 @@ export default async function PublicUnitPage({
         <Fact label="View" value={unit.view_description || "—"} />
       </div>
 
-      {unit.listed_price && (
-        <div className="mt-8 rounded-2xl bg-sage-50 p-6">
-          <p className="text-xs text-charcoal/50 uppercase tracking-wide">Starting from</p>
-          <p className="font-display text-3xl mt-1">AED {unit.listed_price.toLocaleString()}</p>
-          <p className="text-xs text-charcoal/50">per year</p>
-        </div>
-      )}
-
       <a
         href="/#enquire"
         className="mt-8 inline-flex items-center rounded-full bg-sage-500 text-cream px-7 py-3.5 text-sm font-medium hover:bg-sage-600 transition-colors"
