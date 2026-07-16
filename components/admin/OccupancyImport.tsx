@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Papa from "papaparse";
 import { createClient } from "@/lib/supabase/client";
 import { Download, Upload, X } from "lucide-react";
+import type { OccupancyUnit } from "@/lib/supabase/types";
 
 const TEMPLATE_HEADERS = [
   "unit_code", "category", "status", "company_name", "activity",
@@ -13,18 +14,13 @@ const TEMPLATE_HEADERS = [
   "start_date", "end_date", "renewal_date", "comments",
 ];
 
-const EXAMPLE_ROW = [
-  "1", "", "occupied", "Example Trading LLC", "Consulting",
-  "", "", "5", "", "", "", "",
-  "13750", "2750", "27500", "0",
-  "2026-01-15", "2026-12-31", "2026-11-01", "Renewed early",
-];
-
 export default function OccupancyImport({
   locationId,
+  units,
   onImported,
 }: {
   locationId: string;
+  units: OccupancyUnit[];
   onImported: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -32,16 +28,39 @@ export default function OccupancyImport({
   const [result, setResult] = useState<{ matched: number; notFound: string[] } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function downloadTemplate() {
-    const csv = Papa.unparse({
-      fields: TEMPLATE_HEADERS,
-      data: [EXAMPLE_ROW],
-    });
+  function downloadCurrentData() {
+    const rows = units
+      .slice()
+      .sort((a, b) => Number(a.unit_code) - Number(b.unit_code))
+      .map((u) => [
+        u.unit_code,
+        u.category ?? "",
+        u.manual_status ?? "",
+        u.company_name ?? "",
+        u.activity ?? "",
+        u.view_description ?? "",
+        u.workstations_total ?? "",
+        u.workstations_occupied ?? "",
+        u.size_sqm ?? "",
+        u.size_sqft ?? "",
+        u.listed_price ?? "",
+        u.listed_ws_price ?? "",
+        u.actual_rent ?? "",
+        u.monthly_ws_rate ?? "",
+        u.security_deposit ?? "",
+        u.one_time_fee ?? "",
+        u.start_date ?? "",
+        u.end_date ?? "",
+        u.renewal_date ?? "",
+        u.comments ?? "",
+      ]);
+
+    const csv = Papa.unparse({ fields: TEMPLATE_HEADERS, data: rows });
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "flowork-occupancy-template.csv";
+    link.download = "flowork-occupancy-current-data.csv";
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -127,21 +146,20 @@ export default function OccupancyImport({
             </div>
 
             <p className="text-sm text-charcoal/60 mb-4">
-              Updates existing units by matching <code className="bg-charcoal/5 px-1 rounded">unit_code</code> —
-              it won&rsquo;t create new hotspot positions. Room specs
-              (category, size, workstation count, standard price) are
-              already filled in for every unit — you only need to fill in
-              tenant-specific columns (company, dates, actual rent) when a
-              unit becomes occupied. Leave other columns blank to keep the
-              existing values unchanged.
+              Download exports <strong>all {units.length} units for this
+              location</strong> with their current data — edit any cells in
+              Excel, then upload the same file back. Rows are matched by{" "}
+              <code className="bg-charcoal/5 px-1 rounded">unit_code</code>,
+              so it updates the existing hotspots rather than creating new
+              ones. Leave a cell blank to keep its current value unchanged.
             </p>
 
             <button
-              onClick={downloadTemplate}
+              onClick={downloadCurrentData}
               className="w-full flex items-center justify-center gap-2 rounded-lg border border-charcoal/15 py-2.5 text-sm font-medium mb-3 hover:bg-sage-50"
             >
               <Download size={16} />
-              Download CSV template
+              Download all {units.length} units (current data)
             </button>
 
             <button
@@ -150,7 +168,7 @@ export default function OccupancyImport({
               className="w-full flex items-center justify-center gap-2 rounded-lg bg-sage-500 text-cream py-2.5 text-sm font-medium disabled:opacity-60"
             >
               <Upload size={16} />
-              {importing ? "Importing..." : "Upload filled CSV"}
+              {importing ? "Importing..." : "Upload edited CSV"}
             </button>
             <input
               ref={fileInputRef}

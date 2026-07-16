@@ -57,7 +57,7 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
           </button>
         ))}
         </div>
-        {activeLocationId && <OccupancyImport locationId={activeLocationId} onImported={loadUnits} />}
+        {activeLocationId && <OccupancyImport locationId={activeLocationId} units={units} onImported={loadUnits} />}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
