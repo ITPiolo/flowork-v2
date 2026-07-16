@@ -3,14 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import PuckImageField from "@/components/admin/PuckImageField";
 import type { Service } from "@/lib/supabase/types";
 
 export default function ServiceForm({ service }: { service?: Service }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [perksText, setPerksText] = useState(
-    service?.perks?.join("\n") ?? ""
-  );
+  const [perksText, setPerksText] = useState(service?.perks?.join("\n") ?? "");
+  const [heroImageUrl, setHeroImageUrl] = useState(service?.hero_image_url ?? "");
+  const [featureImageUrl, setFeatureImageUrl] = useState(service?.feature_image_url ?? "");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,11 +23,11 @@ export default function ServiceForm({ service }: { service?: Service }) {
       slug: form.get("slug") as string,
       name: form.get("name") as string,
       tagline: form.get("tagline") as string,
-      hero_image_url: form.get("hero_image_url") as string,
+      hero_image_url: heroImageUrl,
       perks: perksText.split("\n").map((p) => p.trim()).filter(Boolean),
       feature_heading: form.get("feature_heading") as string,
       feature_body: form.get("feature_body") as string,
-      feature_image_url: form.get("feature_image_url") as string,
+      feature_image_url: featureImageUrl,
       published: form.get("published") === "on",
     };
 
@@ -46,7 +47,9 @@ export default function ServiceForm({ service }: { service?: Service }) {
       <Row label="Slug (URL)"><input name="slug" defaultValue={service?.slug} required className="input" /></Row>
       <Row label="Name"><input name="name" defaultValue={service?.name} required className="input" /></Row>
       <Row label="Tagline"><input name="tagline" defaultValue={service?.tagline} required className="input" /></Row>
-      <Row label="Hero image URL"><input name="hero_image_url" defaultValue={service?.hero_image_url} required className="input" /></Row>
+      <Row label="Hero image">
+        <PuckImageField value={heroImageUrl} onChange={setHeroImageUrl} />
+      </Row>
       <Row label="Perks (one per line)">
         <textarea
           value={perksText}
@@ -57,7 +60,9 @@ export default function ServiceForm({ service }: { service?: Service }) {
       </Row>
       <Row label="Feature heading"><input name="feature_heading" defaultValue={service?.feature_heading} required className="input" /></Row>
       <Row label="Feature body"><textarea name="feature_body" defaultValue={service?.feature_body} required rows={3} className="input" /></Row>
-      <Row label="Feature image URL"><input name="feature_image_url" defaultValue={service?.feature_image_url} required className="input" /></Row>
+      <Row label="Feature image">
+        <PuckImageField value={featureImageUrl} onChange={setFeatureImageUrl} />
+      </Row>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="published" defaultChecked={service?.published ?? true} />
         Published

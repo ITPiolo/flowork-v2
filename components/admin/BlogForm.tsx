@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import PuckImageField from "@/components/admin/PuckImageField";
 import type { BlogPost } from "@/lib/supabase/types";
 
 function slugify(s: string) {
@@ -18,6 +19,7 @@ export default function BlogForm({ post }: { post?: BlogPost }) {
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState(post?.title ?? "");
   const [slug, setSlug] = useState(post?.slug ?? "");
+  const [coverImageUrl, setCoverImageUrl] = useState(post?.cover_image_url ?? "");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,7 +32,7 @@ export default function BlogForm({ post }: { post?: BlogPost }) {
       title,
       excerpt: form.get("excerpt") as string,
       body: form.get("body") as string,
-      cover_image_url: form.get("cover_image_url") as string,
+      cover_image_url: coverImageUrl,
       category: form.get("category") as string,
       published: form.get("published") === "on",
     };
@@ -65,7 +67,9 @@ export default function BlogForm({ post }: { post?: BlogPost }) {
       </Row>
       <Row label="Category"><input name="category" defaultValue={post?.category ?? "Business Centres"} className="input" /></Row>
       <Row label="Excerpt"><textarea name="excerpt" defaultValue={post?.excerpt} required rows={2} className="input" /></Row>
-      <Row label="Cover image URL"><input name="cover_image_url" defaultValue={post?.cover_image_url} required className="input" /></Row>
+      <Row label="Cover image">
+        <PuckImageField value={coverImageUrl} onChange={setCoverImageUrl} />
+      </Row>
       <Row label="Body"><textarea name="body" defaultValue={post?.body} required rows={10} className="input" /></Row>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="published" defaultChecked={post?.published ?? true} />

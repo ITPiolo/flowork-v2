@@ -22,6 +22,12 @@ export default function UnitDetailPanel({
   const [saving, setSaving] = useState(false);
   const [notes, setNotes] = useState<OccupancyNote[]>([]);
   const [newNote, setNewNote] = useState("");
+  const [showQr, setShowQr] = useState(false);
+
+  const publicUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/units/${unit.id}`
+    : "";
+  const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(publicUrl)}`;
 
   const status = computeStatus(unit);
 
@@ -229,6 +235,9 @@ export default function UnitDetailPanel({
                 <button onClick={() => setEditing(true)} className="flex-1 rounded-full bg-sage-500 text-cream py-2.5 text-sm font-medium">
                   Edit
                 </button>
+                <button onClick={() => setShowQr(true)} className="flex-1 rounded-full border border-charcoal/20 py-2.5 text-sm font-medium">
+                  QR Code
+                </button>
                 <button onClick={handleTerminate} className="flex-1 rounded-full border border-red-300 text-red-600 py-2.5 text-sm font-medium hover:bg-red-50">
                   Terminate
                 </button>
@@ -260,6 +269,31 @@ export default function UnitDetailPanel({
           )}
         </div>
       </div>
+
+      {showQr && (
+        <div className="fixed inset-0 z-[300] bg-charcoal/60 flex items-center justify-center p-4" onClick={() => setShowQr(false)}>
+          <div className="bg-white rounded-2xl p-8 text-center max-w-xs" onClick={(e) => e.stopPropagation()}>
+            <p className="font-display text-lg mb-1">Unit {unit.unit_code}</p>
+            <p className="text-xs text-charcoal/50 mb-4">Scan to view availability &amp; specs</p>
+            {publicUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={qrImageUrl} alt="QR code" className="mx-auto rounded-lg" width={220} height={220} />
+            )}
+            <button
+              onClick={() => window.print()}
+              className="mt-4 w-full rounded-full bg-sage-500 text-cream py-2 text-sm font-medium"
+            >
+              Print
+            </button>
+            <button
+              onClick={() => setShowQr(false)}
+              className="mt-2 w-full rounded-full border border-charcoal/20 py-2 text-sm font-medium"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         .input {

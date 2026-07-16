@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import PuckImageField from "@/components/admin/PuckImageField";
 import type { Location } from "@/lib/supabase/types";
 
 export default function LocationForm({ location }: { location?: Location }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [heroImageUrl, setHeroImageUrl] = useState(location?.hero_image_url ?? "");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function LocationForm({ location }: { location?: Location }) {
       name: form.get("name") as string,
       tagline: form.get("tagline") as string,
       description: form.get("description") as string,
-      hero_image_url: form.get("hero_image_url") as string,
+      hero_image_url: heroImageUrl,
       offices_count: form.get("offices_count") as string,
       coworking_count: form.get("coworking_count") as string,
       meeting_rooms_count: form.get("meeting_rooms_count") as string,
@@ -63,7 +65,9 @@ export default function LocationForm({ location }: { location?: Location }) {
       <Row label="Name"><input name="name" defaultValue={location?.name} required className="input" /></Row>
       <Row label="Tagline"><input name="tagline" defaultValue={location?.tagline} required className="input" /></Row>
       <Row label="Description"><textarea name="description" defaultValue={location?.description} required rows={3} className="input" /></Row>
-      <Row label="Hero image URL"><input name="hero_image_url" defaultValue={location?.hero_image_url} required className="input" /></Row>
+      <Row label="Hero image">
+        <PuckImageField value={heroImageUrl} onChange={setHeroImageUrl} />
+      </Row>
       <div className="grid grid-cols-3 gap-4">
         <Row label="Offices"><input name="offices_count" defaultValue={location?.offices_count ?? "65+"} className="input" /></Row>
         <Row label="Coworking"><input name="coworking_count" defaultValue={location?.coworking_count} className="input" /></Row>
