@@ -14,8 +14,8 @@ const TEMPLATE_HEADERS = [
 ];
 
 const EXAMPLE_ROW = [
-  "1", "Private Office", "occupied", "Example Trading LLC", "Consulting",
-  "City View", "5", "5", "13.9", "149.6", "13750", "2750",
+  "1", "", "occupied", "Example Trading LLC", "Consulting",
+  "", "", "5", "", "", "", "",
   "13750", "2750", "27500", "0",
   "2026-01-15", "2026-12-31", "2026-11-01", "Renewed early",
 ];
@@ -128,8 +128,12 @@ export default function OccupancyImport({
 
             <p className="text-sm text-charcoal/60 mb-4">
               Updates existing units by matching <code className="bg-charcoal/5 px-1 rounded">unit_code</code> —
-              it won&rsquo;t create new hotspot positions. Download the
-              template, fill in real data, then upload it below.
+              it won&rsquo;t create new hotspot positions. Room specs
+              (category, size, workstation count, standard price) are
+              already filled in for every unit — you only need to fill in
+              tenant-specific columns (company, dates, actual rent) when a
+              unit becomes occupied. Leave other columns blank to keep the
+              existing values unchanged.
             </p>
 
             <button
