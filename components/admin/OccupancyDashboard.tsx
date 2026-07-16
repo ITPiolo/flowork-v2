@@ -1,5 +1,6 @@
 "use client";
 
+import OccupancyImport from "@/components/admin/OccupancyImport";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import FloorplanViewer from "@/components/admin/FloorplanViewer";
@@ -42,8 +43,9 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
 
   return (
     <div>
-      <div className="flex gap-2 mb-6">
-        {locations.map((loc) => (
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex gap-2">
+          {locations.map((loc) => (
           <button
             key={loc.id}
             onClick={() => setActiveLocationId(loc.id)}
@@ -54,6 +56,8 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
             {loc.name}
           </button>
         ))}
+        </div>
+        {activeLocationId && <OccupancyImport locationId={activeLocationId} onImported={loadUnits} />}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
