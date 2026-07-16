@@ -15,6 +15,7 @@ const links = [
   { href: "/admin/blog", label: "Blog" },
   { href: "/admin/media", label: "Media Library" },
   { href: "/admin/proposals", label: "Proposal Library" },
+  { href: "/admin/occupancy", label: "Occupancy" },
 ];
 
 export default function AdminSidebar() {

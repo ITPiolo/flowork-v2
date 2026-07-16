@@ -13,6 +13,9 @@ export type Location = {
   address: string;
   display_order: number;
   published: boolean;
+  floorplan_image_url: string | null;
+  floorplan_width: number | null;
+  floorplan_height: number | null;
 };
 
 export type Service = {
@@ -94,6 +97,45 @@ export type ProposalLibraryItem = {
   created_at: string;
 };
 
+export type OccupancyUnit = {
+  id: string;
+  location_id: string;
+  unit_code: string;
+  category: "Private Office" | "Dedicated Desk" | "Flexi Desk" | "Meeting Room" | "Phone Booth";
+  manual_status: "occupied" | "vacant";
+  company_name: string | null;
+  activity: string | null;
+  view_description: string | null;
+  workstations_total: number | null;
+  workstations_occupied: number | null;
+  size_sqm: number | null;
+  size_sqft: number | null;
+  listed_price: number | null;
+  listed_ws_price: number | null;
+  actual_rent: number | null;
+  monthly_ws_rate: number | null;
+  security_deposit: number | null;
+  one_time_fee: number | null;
+  start_date: string | null;
+  end_date: string | null;
+  renewal_date: string | null;
+  comments: string | null;
+  hotspot_x: number;
+  hotspot_y: number;
+  hotspot_w: number;
+  hotspot_h: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type OccupancyNote = {
+  id: string;
+  unit_id: string;
+  author_email: string | null;
+  note: string;
+  created_at: string;
+};
+
 // Minimal Database type — expand with generated types via
 // `supabase gen types typescript` once the project is linked.
 export type Database = {
@@ -106,6 +148,8 @@ export type Database = {
       enquiries: { Row: Enquiry; Insert: Partial<Enquiry>; Update: Partial<Enquiry> };
       enquiry_notes: { Row: EnquiryNote; Insert: Partial<EnquiryNote>; Update: Partial<EnquiryNote> };
       proposal_library: { Row: ProposalLibraryItem; Insert: Partial<ProposalLibraryItem>; Update: Partial<ProposalLibraryItem> };
+      occupancy_units: { Row: OccupancyUnit; Insert: Partial<OccupancyUnit>; Update: Partial<OccupancyUnit> };
+      occupancy_notes: { Row: OccupancyNote; Insert: Partial<OccupancyNote>; Update: Partial<OccupancyNote> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };
