@@ -159,16 +159,24 @@ export default function UnitDetailPanel({
                 <Row label="Listed price (AED)">
                   <input type="number" value={form.listed_price ?? ""} onChange={(e) => update("listed_price", Number(e.target.value))} className="input" />
                 </Row>
-                <Row label="Actual rent (AED)">
-                  <input type="number" value={form.actual_rent ?? ""} onChange={(e) => update("actual_rent", Number(e.target.value))} className="input" />
+                <Row label="Listed WS price (standard rate)">
+                  <input type="number" value={form.listed_ws_price ?? ""} onChange={(e) => update("listed_ws_price", Number(e.target.value))} className="input" />
                 </Row>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <Row label="Monthly WS rate">
+                <Row label="Actual rent (AED)">
+                  <input type="number" value={form.actual_rent ?? ""} onChange={(e) => update("actual_rent", Number(e.target.value))} className="input" />
+                </Row>
+                <Row label="Monthly WS rate (actual)">
                   <input type="number" value={form.monthly_ws_rate ?? ""} onChange={(e) => update("monthly_ws_rate", Number(e.target.value))} className="input" />
                 </Row>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 <Row label="Security deposit">
                   <input type="number" value={form.security_deposit ?? ""} onChange={(e) => update("security_deposit", Number(e.target.value))} className="input" />
+                </Row>
+                <Row label="One-time fee">
+                  <input type="number" value={form.one_time_fee ?? ""} onChange={(e) => update("one_time_fee", Number(e.target.value))} className="input" />
                 </Row>
               </div>
               <p className="text-xs text-charcoal/40 uppercase tracking-wide pt-2">Contract</p>
@@ -206,9 +214,11 @@ export default function UnitDetailPanel({
               <DetailRow label="Size" value={unit.size_sqm ? `${unit.size_sqm} sqm (${unit.size_sqft ?? "—"} sqft)` : null} />
               <p className="text-xs text-charcoal/40 uppercase tracking-wide pt-2">Financials</p>
               <DetailRow label="Listed price" value={unit.listed_price ? `AED ${unit.listed_price.toLocaleString()}` : null} />
+              <DetailRow label="Listed WS price (standard)" value={unit.listed_ws_price ? `AED ${unit.listed_ws_price.toLocaleString()}` : null} />
               <DetailRow label="Actual rent" value={unit.actual_rent ? `AED ${unit.actual_rent.toLocaleString()}` : null} />
-              <DetailRow label="Monthly WS rate" value={unit.monthly_ws_rate ? `AED ${unit.monthly_ws_rate.toLocaleString()}` : null} />
+              <DetailRow label="Monthly WS rate (actual)" value={unit.monthly_ws_rate ? `AED ${unit.monthly_ws_rate.toLocaleString()}` : null} />
               <DetailRow label="Security deposit" value={unit.security_deposit ? `AED ${unit.security_deposit.toLocaleString()}` : null} />
+              <DetailRow label="One-time fee" value={unit.one_time_fee ? `AED ${unit.one_time_fee.toLocaleString()}` : null} />
               <p className="text-xs text-charcoal/40 uppercase tracking-wide pt-2">Contract</p>
               <DetailRow label="Start date" value={unit.start_date} />
               <DetailRow label="End date" value={unit.end_date} />
