@@ -93,7 +93,15 @@ export default function ProposalLibrary() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl mb-2">Proposal Library</h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="font-display text-2xl">Proposal Library</h1>
+        <a
+          href="/admin/proposals/new-template"
+          className="text-sm rounded-full bg-charcoal text-cream px-4 py-2 font-medium"
+        >
+          + Create template from old proposal
+        </a>
+      </div>
       <p className="text-sm text-charcoal/50 mb-6">
         Upload your existing proposal documents here to keep them organized
         and ready to attach to any lead&rsquo;s email.
