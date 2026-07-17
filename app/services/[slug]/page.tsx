@@ -57,10 +57,10 @@ export async function generateMetadata({
 
   if (!data) return {};
   const service = data as Service;
-return {
-  title: service.name,
-  description: service.tagline,
-};
+  return {
+    title: service.name,
+    description: service.tagline,
+  };
 }
 
 export default async function ServicePage({
@@ -219,10 +219,10 @@ export default async function ServicePage({
           />
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="font-display text-2xl md:text-3xl mb-6">
-            Book {service.name.toLowerCase() === "meeting room" ? "a" : "your"} {service.name}
-          </h2>
-          <EnquiryForm defaultService={service.name} />
+          <EnquiryForm
+            defaultService={service.name}
+            heading={`Book ${service.name.toLowerCase() === "meeting room" ? "a" : "your"} ${service.name}`}
+          />
         </Reveal>
       </section>
 
