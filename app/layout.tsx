@@ -10,6 +10,7 @@ import Preloader from "@/components/Preloader";
 import { Analytics } from "@vercel/analytics/react";
 import { createClient } from "@/lib/supabase/server";
 import type { Location } from "@/lib/supabase/types";
+import StructuredData from "@/components/StructuredData";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -51,6 +52,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
+        <StructuredData />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[500] focus:bg-sage-500 focus:text-cream focus:px-4 focus:py-2 focus:rounded-full"
