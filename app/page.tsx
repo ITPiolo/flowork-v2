@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Render } from "@measured/puck";
+import PuckRenderer from "@/components/PuckRenderer";
 import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
 import EnquiryForm from "@/components/EnquiryForm";
 import HorizontalBlogScroll from "@/components/HorizontalBlogScroll";
-import { puckConfig } from "@/lib/puckConfig";
 import type { Service, BlogPost, CustomPage } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -29,7 +28,7 @@ export default async function HomePage() {
       {/* Editable via /admin/pages → Homepage — drag, reorder, or edit
           the Hero, Trust Bar, Why Flowork, and Testimonials blocks here. */}
       {homePage ? (
-        <Render config={puckConfig} data={homePage.content} />
+        <PuckRenderer data={homePage.content} />
       ) : (
         <div className="max-w-content mx-auto px-6 py-24 text-center text-charcoal/40">
           Homepage content not found — run the homepage seed SQL, or edit
