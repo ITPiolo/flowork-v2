@@ -132,18 +132,16 @@ export default async function HomePage() {
       </section>
 
       {postList.length > 0 && (
-        <section className="bg-sage-50 py-20">
-          <div className="max-w-content mx-auto px-6 lg:px-8">
+        <section className="bg-sage-50">
+          <div className="max-w-content mx-auto px-6 lg:px-8 pt-20">
             <Reveal>
               <span className="eyebrow">From the blog</span>
               <h2 className="font-display text-3xl md:text-4xl mt-2">
                 Insights &amp; inspiration
               </h2>
             </Reveal>
-            <div className="mt-12">
-              <HorizontalBlogScroll posts={postList} />
-            </div>
           </div>
+          <HorizontalBlogScroll posts={postList} />
         </section>
       )}
     </>
