@@ -1,33 +1,44 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Render } from "@measured/puck";
 import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
 import EnquiryForm from "@/components/EnquiryForm";
-import Hero from "@/components/Hero";
-import TrustSection from "@/components/TrustSection";
-import Testimonials from "@/components/Testimonials";
 import HorizontalBlogScroll from "@/components/HorizontalBlogScroll";
-import type { Service, BlogPost } from "@/lib/supabase/types";
+import { puckConfig } from "@/lib/puckConfig";
+import type { Service, BlogPost, CustomPage } from "@/lib/supabase/types";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const [{ data: services }, { data: posts }] = await Promise.all([
+  const [{ data: homePageData }, { data: services }, { data: posts }] = await Promise.all([
+    supabase.from("custom_pages").select("*").eq("slug", "__home__").eq("published", true).single(),
     supabase.from("services").select("*").order("display_order").limit(4),
     supabase.from("blog_posts").select("*").order("published_at", { ascending: false }).limit(6),
   ]);
 
+  const homePage = homePageData as CustomPage | null;
   const svcList = (services ?? []) as Service[];
   const postList = (posts ?? []) as BlogPost[];
 
   return (
     <>
-      <Hero />
-      <TrustSection />
+      {/* Editable via /admin/pages → Homepage — drag, reorder, or edit
+          the Hero, Trust Bar, Why Flowork, and Testimonials blocks here. */}
+      {homePage ? (
+        <Render config={puckConfig} data={homePage.content} />
+      ) : (
+        <div className="max-w-content mx-auto px-6 py-24 text-center text-charcoal/40">
+          Homepage content not found — run the homepage seed SQL, or edit
+          this page in /admin/pages.
+        </div>
+      )}
 
+      {/* Live data — always pulls current Services, not part of the
+          editable canvas since it's already editable via /admin/services */}
       <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
         <Reveal>
           <span className="eyebrow">What we offer</span>
@@ -82,40 +93,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
-        <Reveal>
-          <span className="eyebrow">Why flowork</span>
-          <h2 className="font-display text-3xl md:text-4xl mt-2 max-w-xl">
-            Built for how modern businesses actually work
-          </h2>
-        </Reveal>
-        <div className="mt-12 grid md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Flexible by design",
-              body: "Scale up or down as your team changes, with contracts that move at the speed of your business.",
-            },
-            {
-              title: "Prime addresses",
-              body: "Dubai Hills and Vision Tower Business Bay — locations that make the right impression before you say a word.",
-            },
-            {
-              title: "Everything included",
-              body: "High-speed Wi-Fi, IT support, printing, and reception — the essentials handled, so you can focus on the work.",
-            },
-          ].map((item, i) => (
-            <Reveal key={item.title} delay={i * 0.1}>
-              <div className="border-t-2 border-sage-500 pt-5">
-                <h3 className="font-display text-xl">{item.title}</h3>
-                <p className="mt-2 text-sm text-charcoal/60">{item.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <Testimonials />
-
       <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-stretch">
         <Reveal className="relative rounded-2xl overflow-hidden min-h-[400px]">
           <Image
@@ -132,8 +109,8 @@ export default async function HomePage() {
       </section>
 
       {postList.length > 0 && (
-        <section className="bg-sage-50">
-          <div className="max-w-content mx-auto px-6 lg:px-8 pt-20">
+        <section className="bg-sage-50 py-20">
+          <div className="max-w-content mx-auto px-6 lg:px-8">
             <Reveal>
               <span className="eyebrow">From the blog</span>
               <h2 className="font-display text-3xl md:text-4xl mt-2">
@@ -141,7 +118,9 @@ export default async function HomePage() {
               </h2>
             </Reveal>
           </div>
-          <HorizontalBlogScroll posts={postList} />
+          <div className="mt-12">
+            <HorizontalBlogScroll posts={postList} />
+          </div>
         </section>
       )}
     </>
