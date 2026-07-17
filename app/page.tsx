@@ -17,7 +17,7 @@ export default async function HomePage() {
 
   const [{ data: services }, { data: posts }] = await Promise.all([
     supabase.from("services").select("*").order("display_order").limit(4),
-    supabase.from("blog_posts").select("*").order("published_at", { ascending: false }).limit(3),
+    supabase.from("blog_posts").select("*").order("published_at", { ascending: false }).limit(6),
   ]);
 
   const svcList = (services ?? []) as Service[];

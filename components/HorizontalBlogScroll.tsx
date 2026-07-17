@@ -62,7 +62,7 @@ export default function HorizontalBlogScroll({ posts }: { posts: BlogPost[] }) {
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <motion.div ref={trackRef} style={{ x }} className="flex gap-8 px-6 lg:px-8">
           {posts.map((post) => (
-            <BlogCard key={post.id} post={post} className="shrink-0 w-[85vw] sm:w-[420px]" />
+            <BlogCard key={post.id} post={post} className="shrink-0 w-[85vw] sm:w-[480px] lg:w-[560px]" />
           ))}
         </motion.div>
       </div>
