@@ -2,6 +2,8 @@ import type { Config } from "@measured/puck";
 import Image from "next/image";
 import Link from "next/link";
 import PuckImageField from "@/components/admin/PuckImageField";
+import HeroBlock from "@/components/blocks/HeroBlock";
+import TestimonialsBlock from "@/components/blocks/TestimonialsBlock";
 
 // Defines every block your client can drag onto the canvas in the
 // custom page builder (/admin/pages). Composite blocks (Hero, TextImage,
@@ -97,7 +99,7 @@ export const puckConfig: Config = {
   categories: {
     sections: {
       title: "Ready-made sections",
-      components: ["Hero", "TextImage", "Gallery", "Testimonial", "CTA", "FAQAccordion", "Stats"],
+      components: ["Hero", "RotatingHero", "TextImage", "Gallery", "Testimonial", "TestimonialsCarousel", "CTA", "FAQAccordion", "Stats", "TrustBar", "WhyFlowork"],
     },
     elements: {
       title: "Individual elements",
@@ -480,6 +482,121 @@ export const puckConfig: Config = {
       },
       defaultProps: { height: "h-16" },
       render: ({ height }) => <div className={height} />,
+    },
+
+    RotatingHero: {
+      fields: {
+        eyebrow: { type: "text" },
+        heading: { type: "text" },
+        subheading: { type: "textarea" },
+        images: {
+          type: "array",
+          arrayFields: { url: imageField("Image") },
+          getItemSummary: () => "Photo",
+        },
+        primaryLabel: { type: "text" },
+        primaryHref: { type: "text" },
+        secondaryLabel: { type: "text" },
+        secondaryHref: { type: "text" },
+      },
+      defaultProps: {
+        eyebrow: "Dubai Hills & Business Bay",
+        heading: "Workspaces that elevate your business",
+        subheading: "Premium private offices, coworking, and meeting rooms designed for teams who expect more from where they work.",
+        images: [
+          { url: "/images/Reception-01-rd-1536x1182.jpg" },
+          { url: "/images/Co-Working-02-Copy.jpg" },
+        ],
+        primaryLabel: "Enquire Now",
+        primaryHref: "/#enquire",
+        secondaryLabel: "Explore Locations",
+        secondaryHref: "/locations",
+      },
+      render: (props: any) => <HeroBlock {...props} />,
+    },
+
+    TestimonialsCarousel: {
+      fields: {
+        eyebrow: { type: "text" },
+        heading: { type: "text" },
+        quotes: {
+          type: "array",
+          arrayFields: {
+            quote: { type: "textarea" },
+            author: { type: "text" },
+          },
+          getItemSummary: (item: any) => item.author || "Quote",
+        },
+      },
+      defaultProps: {
+        eyebrow: "What members say",
+        heading: "Trusted by the businesses who work here",
+        quotes: [{ quote: "Add a real testimonial quote here.", author: "Name, Role" }],
+      },
+      render: (props: any) => <TestimonialsBlock {...props} />,
+    },
+
+    TrustBar: {
+      fields: {
+        point1: { type: "text" },
+        point2: { type: "text" },
+        point3: { type: "text" },
+        point4: { type: "text" },
+      },
+      defaultProps: {
+        point1: "1,000+ businesses hosted",
+        point2: "2 flagship Dubai locations",
+        point3: "50-strong on-site team",
+        point4: "24/7 secure access",
+      },
+      render: (props: any) => (
+        <section className="border-y border-charcoal/10 bg-sage-50/50 py-14">
+          <div className="max-w-content mx-auto px-6 lg:px-8">
+            <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
+              {[props.point1, props.point2, props.point3, props.point4].filter(Boolean).map((p: string, i: number) => (
+                <span key={i} className="text-sm font-medium text-charcoal/60">{p}</span>
+              ))}
+            </div>
+          </div>
+        </section>
+      ),
+    },
+
+    WhyFlowork: {
+      fields: {
+        eyebrow: { type: "text" },
+        heading: { type: "text" },
+        card1Title: { type: "text" },
+        card1Body: { type: "textarea" },
+        card2Title: { type: "text" },
+        card2Body: { type: "textarea" },
+        card3Title: { type: "text" },
+        card3Body: { type: "textarea" },
+      },
+      defaultProps: {
+        eyebrow: "Why flowork",
+        heading: "Built for how modern businesses actually work",
+        card1Title: "Flexible by design",
+        card1Body: "Scale up or down as your team changes, with contracts that move at the speed of your business.",
+        card2Title: "Prime addresses",
+        card2Body: "Dubai Hills and Vision Tower Business Bay — locations that make the right impression before you say a word.",
+        card3Title: "Everything included",
+        card3Body: "High-speed Wi-Fi, IT support, printing, and reception — the essentials handled, so you can focus on the work.",
+      },
+      render: (props: any) => (
+        <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
+          <span className="eyebrow">{props.eyebrow}</span>
+          <h2 className="font-display text-3xl md:text-4xl mt-2 max-w-xl">{props.heading}</h2>
+          <div className="mt-12 grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="border-t-2 border-sage-500 pt-5">
+                <h3 className="font-display text-xl">{props[`card${n}Title`]}</h3>
+                <p className="mt-2 text-sm text-charcoal/60">{props[`card${n}Body`]}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ),
     },
   },
 };

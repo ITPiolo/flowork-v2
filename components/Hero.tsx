@@ -104,7 +104,7 @@ export default function Hero() {
                 onClick={() => setIndex(i)}
                 aria-label={`Show photo ${i + 1}`}
                 className={`h-1 rounded-full transition-all ${
-                  i === index ? "w-8 bg-sage-400" : "w-3 bg-cream/20"
+                  i === index ? "w-8 bg-sand" : "w-3 bg-cream/35"
                 }`}
               />
             ))}
