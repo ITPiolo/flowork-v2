@@ -116,17 +116,15 @@ export default async function HomePage() {
 
       <Testimonials />
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
-        <Reveal>
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-            <Image
-              src="/images/Reception-01-rd-1536x1182.jpg"
-              alt="flowork reception"
-              fill
-              quality={90}
-              className="object-cover"
-            />
-          </div>
+      <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-stretch">
+        <Reveal className="relative rounded-2xl overflow-hidden min-h-[400px]">
+          <Image
+            src="/images/Reception-01-rd-1536x1182.jpg"
+            alt="flowork reception"
+            fill
+            quality={90}
+            className="object-cover"
+          />
         </Reveal>
         <Reveal delay={0.1}>
           <EnquiryForm />

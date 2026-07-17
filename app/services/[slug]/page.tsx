@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import EnquiryForm from "@/components/EnquiryForm";
 import ServiceCard from "@/components/ServiceCard";
-import VirtualTourButton from "@/components/VirtualTourButton";
 import type { Service } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -58,10 +57,10 @@ export async function generateMetadata({
 
   if (!data) return {};
   const service = data as Service;
-  return {
-    title: service.name,
-    description: service.tagline,
-  };
+return {
+  title: service.name,
+  description: service.tagline,
+};
 }
 
 export default async function ServicePage({
@@ -174,17 +173,9 @@ export default async function ServicePage({
           </section>
 
           <section className="max-w-content mx-auto px-6 lg:px-8 py-16 grid md:grid-cols-2 gap-10">
-        <Reveal>
-          <h2 className="font-display text-2xl">The perks of {service.name.toLowerCase()}</h2>
-          {(slug === "meeting-room" || slug === "podcast-room") && (
-            <div className="mt-6">
-              <VirtualTourButton
-                startScene={slug === "meeting-room" ? "meeting" : "podcast"}
-                className="inline-flex items-center rounded-full bg-sage-500 text-cream px-6 py-3 text-sm font-medium hover:bg-sage-600 transition-colors"
-              />
-            </div>
-          )}
-        </Reveal>
+            <Reveal>
+              <h2 className="font-display text-2xl">The perks of {service.name.toLowerCase()}</h2>
+            </Reveal>
             <Reveal delay={0.1}>
               <ul className="space-y-3">
                 {service.perks.map((perk) => (
@@ -219,17 +210,15 @@ export default async function ServicePage({
         </>
       )}
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
-        <Reveal>
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-            <Image
-              src={service.hero_image_url}
-              alt={`Book ${service.name}`}
-              fill
-              quality={90}
-              className="object-cover"
-            />
-          </div>
+      <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-stretch">
+        <Reveal className="relative rounded-2xl overflow-hidden min-h-[400px]">
+          <Image
+            src={service.hero_image_url}
+            alt={`Book ${service.name}`}
+            fill
+            quality={90}
+            className="object-cover"
+          />
         </Reveal>
         <Reveal delay={0.1}>
           <h2 className="font-display text-2xl md:text-3xl mb-6">

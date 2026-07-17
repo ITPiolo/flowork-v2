@@ -38,7 +38,7 @@ export default function Header({ locations }: { locations: Location[] }) {
           <span className="text-charcoal">work.</span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-8">
           {nav.map((item) => (
             <div key={item.label} className="relative group py-2">
               <Link
@@ -78,6 +78,8 @@ export default function Header({ locations }: { locations: Location[] }) {
           className="lg:hidden text-charcoal"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
         >
           {open ? <X /> : <Menu />}
         </button>
@@ -86,13 +88,14 @@ export default function Header({ locations }: { locations: Location[] }) {
       <AnimatePresence>
         {open && (
           <motion.div
+            id="mobile-nav"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="lg:hidden overflow-hidden border-t border-charcoal/5 bg-cream"
           >
-            <div className="px-6 py-4 flex flex-col gap-4">
+            <nav aria-label="Mobile navigation" className="px-6 py-4 flex flex-col gap-4">
               {nav.map((item) => (
                 <Link
                   key={item.label}
@@ -110,7 +113,7 @@ export default function Header({ locations }: { locations: Location[] }) {
               >
                 Enquire Now
               </Link>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
