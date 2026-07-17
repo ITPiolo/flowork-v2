@@ -148,7 +148,7 @@ export default function EnquiryForm({
             </Field>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-center">
             <button
               type="submit"
               disabled={status === "loading"}
