@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
-import { Render } from "@measured/puck";
 import { createClient } from "@/lib/supabase/server";
-import { puckConfig } from "@/lib/puckConfig";
+import PuckRenderer from "@/components/PuckRenderer";
 import type { CustomPage } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -45,5 +44,5 @@ export default async function CustomPageRoute({
   if (!data) notFound();
   const page = data as CustomPage;
 
-  return <Render config={puckConfig} data={page.content} />;
+  return <PuckRenderer data={page.content} />;
 }
