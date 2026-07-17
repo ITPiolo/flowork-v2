@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import AnimatedStat from "@/components/AnimatedStat";
 import EnquiryForm from "@/components/EnquiryForm";
+import Gallery from "@/components/Gallery";
 import type { Location } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -94,6 +95,16 @@ export default async function LocationPage({
           </div>
         </Reveal>
       </section>
+
+      {location.gallery_images && location.gallery_images.length > 0 && (
+        <section className="max-w-content mx-auto px-6 lg:px-8 pb-20">
+          <Reveal>
+            <span className="eyebrow">Gallery</span>
+            <h2 className="font-display text-3xl mt-2 mb-8">More of {location.name}</h2>
+          </Reveal>
+          <Gallery images={location.gallery_images} title={location.name} />
+        </section>
+      )}
 
       <section className="max-w-content mx-auto px-6 lg:px-8 pb-20">
         <Reveal>

@@ -16,6 +16,7 @@ export type Location = {
   floorplan_image_url: string | null;
   floorplan_width: number | null;
   floorplan_height: number | null;
+  gallery_images: string[];
 };
 
 export type Service = {

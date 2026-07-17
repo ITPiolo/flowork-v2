@@ -11,6 +11,7 @@ export default function LocationForm({ location }: { location?: Location }) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [heroImageUrl, setHeroImageUrl] = useState(location?.hero_image_url ?? "");
+  const [galleryImages, setGalleryImages] = useState<string[]>(location?.gallery_images ?? []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,6 +25,7 @@ export default function LocationForm({ location }: { location?: Location }) {
       tagline: form.get("tagline") as string,
       description: form.get("description") as string,
       hero_image_url: heroImageUrl,
+      gallery_images: galleryImages,
       offices_count: form.get("offices_count") as string,
       coworking_count: form.get("coworking_count") as string,
       meeting_rooms_count: form.get("meeting_rooms_count") as string,
@@ -67,6 +69,38 @@ export default function LocationForm({ location }: { location?: Location }) {
       <Row label="Description"><textarea name="description" defaultValue={location?.description} required rows={3} className="input" /></Row>
       <Row label="Hero image">
         <PuckImageField value={heroImageUrl} onChange={setHeroImageUrl} />
+      </Row>
+      <Row label={`Gallery images (${galleryImages.length})`}>
+        <div className="space-y-3">
+          {galleryImages.map((url, i) => (
+            <div key={i} className="flex gap-2 items-start">
+              <div className="flex-1">
+                <PuckImageField
+                  value={url}
+                  onChange={(newUrl) => {
+                    const next = [...galleryImages];
+                    next[i] = newUrl;
+                    setGalleryImages(next);
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setGalleryImages(galleryImages.filter((_, idx) => idx !== i))}
+                className="text-xs text-red-600 hover:underline mt-2"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => setGalleryImages([...galleryImages, ""])}
+            className="text-xs rounded-lg border border-charcoal/15 px-3 py-2 hover:bg-sage-50"
+          >
+            + Add gallery image
+          </button>
+        </div>
       </Row>
       <div className="grid grid-cols-3 gap-4">
         <Row label="Offices"><input name="offices_count" defaultValue={location?.offices_count ?? "65+"} className="input" /></Row>
