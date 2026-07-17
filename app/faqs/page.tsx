@@ -8,27 +8,31 @@ import Reveal from "@/components/Reveal";
 const FAQS = [
   {
     q: "What is coworking?",
-    a: "Coworking is a modern work style where individuals or professionals from different companies work in a shared space. It provides a flexible, collaborative environment that fosters productivity, networking, and community.",
+    a: "Coworking spaces offer flexibility by allowing workers to adjust their work environment and choose from various membership options to fit their needs. These spaces enhance professional identities by fostering a sense of belonging and providing environments conducive to networking and making positive impressions on clients. Research shows that coworking spaces improve employee well-being, with many members feeling healthier, more focused, and more productive compared to traditional office or home settings. They also support job-crafting, enabling workers to build relationships outside their organization and engage in a communal environment with social activities. Ultimately, coworking spaces create a sense of community, which is crucial for engagement and retention, especially in remote work scenarios, with community managers organizing workshops and networking events.",
   },
   {
-    q: "What types of memberships do you offer?",
-    a: "We offer various membership options including access to shared workspaces, private offices, meeting rooms, and amenities — from hot desks to fully private offices, all with flexible contract terms.",
+    q: "Why flowork?",
+    a: "\"flowork offers modern serviced offices and coworking spaces with IT infrastructure, fast and secure internet, and access to in-house IT experts.\" Benefit from a dedicated telephone number and receptionist to answer your calls, access to photocopiers, printers, scanners, and other office equipment, bookable meeting rooms and boardrooms, a professional team of secretaries to take calls and process mail, and fully stocked photo and recording studio rentals.",
   },
   {
-    q: "Can I book a meeting room without being a member?",
-    a: "Yes — you can book our meeting rooms and event spaces even if you're not a member. We offer flexible booking options for individuals and businesses who need a professional space for meetings, workshops, or events.",
+    q: "Can I book a meeting room or event space without being a member?",
+    a: "Yes, you can book our meeting rooms and event spaces even if you're not a member. We offer flexible booking options for individuals and businesses who need a professional space for meetings, workshops, or events. Please contact us or visit our website for more information on booking options.",
   },
   {
     q: "Can I bring guests or clients to the coworking space?",
-    a: "Absolutely. We understand the importance of collaboration and networking, and we encourage interactions among members and their guests.",
+    a: "Absolutely! You are welcome to bring guests or clients to our coworking spaces. We understand the importance of collaboration and networking, and we encourage interactions among members and their guests. Please check with our staff regarding any specific policies or guidelines for hosting guests.",
+  },
+  {
+    q: "Can I customize my private office or workspace?",
+    a: "We provide offices of all sizes, offering flexibility in personalizing your private office or workspace to meet your needs. We strive to accommodate customization requests whenever possible. Please reach out to our team to discuss your specific requirements.",
   },
   {
     q: "Are there networking events or community activities at flowork?",
-    a: "Yes, we regularly host networking events, workshops, and community activities to foster connections and collaboration among our members.",
+    a: "Yes, we regularly host networking events, workshops, and community activities to foster connections and collaboration among our members. These events provide opportunities to network, learn from industry experts, and engage with like-minded professionals. Stay updated on our upcoming events by subscribing to our newsletter or checking our event calendar.",
   },
   {
-    q: "What safety measures are in place?",
-    a: "We've implemented secure access systems, CCTV surveillance, regular cleaning and sanitisation, and adherence to health and safety guidelines across both locations.",
+    q: "What safety measures do you have in place?",
+    a: "The safety and well-being of our members are our top priorities. We have implemented various safety measures, including secure access systems, CCTV surveillance, regular cleaning and sanitization, and adherence to health and safety guidelines. We continuously monitor and update our protocols to ensure a safe and comfortable workspace for everyone.",
   },
 ];
 
