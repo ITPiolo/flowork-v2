@@ -189,21 +189,19 @@ export default async function ServicePage({
           </section>
 
           <section className="bg-charcoal text-cream">
-            <div className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center">
-              <Reveal>
+            <div className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-stretch">
+              <Reveal className="flex flex-col justify-center">
                 <h2 className="font-display text-3xl md:text-4xl">{service.feature_heading}</h2>
                 <p className="mt-4 text-cream/70">{service.feature_body}</p>
               </Reveal>
-              <Reveal delay={0.15}>
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                  <Image
-                    src={service.feature_image_url}
-                    alt={service.feature_heading}
-                    fill
-                    quality={90}
-                    className="object-cover"
-                  />
-                </div>
+              <Reveal delay={0.15} className="relative rounded-2xl overflow-hidden min-h-[300px]">
+                <Image
+                  src={service.feature_image_url}
+                  alt={service.feature_heading}
+                  fill
+                  quality={90}
+                  className="object-cover"
+                />
               </Reveal>
             </div>
           </section>
