@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import ScrollSpine from "@/components/ScrollSpine";
 import PageTransition from "@/components/PageTransition";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import SmoothScroll from "@/components/SmoothScroll";
 import Preloader from "@/components/Preloader";
 import { Analytics } from "@vercel/analytics/react";
 import { createClient } from "@/lib/supabase/server";
@@ -59,7 +58,6 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <Preloader />
-        <SmoothScroll />
         <ScrollSpine />
         <Header locations={(locations ?? []) as Location[]} />
         <main id="main-content">
