@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Building2, MapPin, Users, ShieldCheck } from "lucide-react";
 import { motion, useInView, animate } from "framer-motion";
 
@@ -45,7 +45,7 @@ function StatCard({
   index: number;
   startCounting: boolean;
 }) {
-  const parsed = parseStat(text);
+  const parsed = useMemo(() => parseStat(text), [text]);
   const [display, setDisplay] = useState("0");
 
   useEffect(() => {
@@ -59,7 +59,8 @@ function StatCard({
       },
     });
     return () => controls.stop();
-  }, [startCounting, parsed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startCounting, parsed?.target]);
 
   if (!parsed) {
     return (
