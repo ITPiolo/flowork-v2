@@ -26,39 +26,55 @@ export default function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((i) => (i + 1) % HERO_IMAGES.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <section className="relative w-full">
-      <div className="relative h-[85vh] min-h-[560px] w-full overflow-hidden">
+      <div className="relative h-[85vh] min-h-[560px] w-full overflow-hidden bg-charcoal">
         <AnimatePresence mode="sync">
           <motion.div
             key={index}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
-            <Image
-              src={HERO_IMAGES[index]}
-              alt="flowork workspace"
-              fill
-              priority={index === 0}
-              quality={95}
-              sizes="100vw"
-              className="object-cover"
-            />
+            {/* Slow continuous Ken Burns zoom for the full duration this
+                slide is showing — reads as cinematic rather than static. */}
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.08 }}
+              transition={{ duration: 6, ease: "linear" }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={HERO_IMAGES[index]}
+                alt="flowork workspace"
+                fill
+                priority={index === 0}
+                quality={95}
+                sizes="100vw"
+                className="object-cover"
+              />
+            </motion.div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Stronger, more consistent scrim so text stays readable
-            regardless of which photo is showing — a top-to-bottom fade
-            plus a left-side fade specifically behind the text column. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/40 to-charcoal/25" />
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/60 via-charcoal/10 to-transparent" />
+        {/* Cinematic vignette: strong only at the very bottom (for the
+            stats bar transition) and a soft radial glow behind the text
+            column — leaves the middle/right of the photo clear so its
+            real color and warmth show through instead of a flat wash. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/10 to-transparent" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 800px 600px at 15% 65%, rgba(26,29,24,0.75), transparent 70%)",
+          }}
+        />
 
         <div className="relative h-full max-w-content mx-auto px-6 lg:px-8 flex flex-col items-start justify-end pb-16">
           <motion.p
@@ -73,7 +89,8 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.55, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-4xl md:text-6xl lg:text-7xl text-cream max-w-3xl leading-[1.05] drop-shadow-md"
+            className="font-display text-4xl md:text-6xl lg:text-7xl text-cream max-w-3xl leading-[1.05]"
+            style={{ textShadow: "0 2px 24px rgba(0,0,0,0.4)" }}
           >
             Workspaces that elevate your business
           </motion.h1>
@@ -81,7 +98,8 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
-            className="mt-5 text-cream/90 max-w-lg text-base md:text-lg drop-shadow-sm"
+            className="mt-5 text-cream/90 max-w-lg text-base md:text-lg"
+            style={{ textShadow: "0 1px 12px rgba(0,0,0,0.4)" }}
           >
             Premium private offices, coworking, and meeting rooms designed
             for teams who expect more from where they work.
@@ -94,13 +112,13 @@ export default function Hero() {
           >
             <Link
               href="/#enquire"
-              className="inline-flex items-center rounded-full bg-sage-500 text-cream px-7 py-3.5 text-sm font-medium hover:bg-sage-600 transition-colors"
+              className="inline-flex items-center rounded-full bg-sage-500 text-cream px-7 py-3.5 text-sm font-medium shadow-lg shadow-sage-900/20 hover:bg-sage-600 hover:scale-[1.02] transition-all"
             >
               Enquire Now
             </Link>
             <Link
               href="/locations"
-              className="inline-flex items-center rounded-full border border-cream/40 text-cream px-7 py-3.5 text-sm font-medium hover:bg-cream/10 transition-colors"
+              className="inline-flex items-center rounded-full border border-cream/50 bg-cream/5 backdrop-blur-sm text-cream px-7 py-3.5 text-sm font-medium hover:bg-cream/15 transition-colors"
             >
               Explore Locations
             </Link>
@@ -108,7 +126,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Slide indicator dots */}
         <div className="absolute bottom-6 right-6 flex gap-2">
           {HERO_IMAGES.map((_, i) => (
             <button
