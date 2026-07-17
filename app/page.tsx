@@ -7,7 +7,7 @@ import EnquiryForm from "@/components/EnquiryForm";
 import Hero from "@/components/Hero";
 import TrustSection from "@/components/TrustSection";
 import Testimonials from "@/components/Testimonials";
-import BlogPreview from "@/components/BlogPreview";
+import HorizontalBlogScroll from "@/components/HorizontalBlogScroll";
 import type { Service, BlogPost } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -141,7 +141,7 @@ export default async function HomePage() {
               </h2>
             </Reveal>
             <div className="mt-12">
-              <BlogPreview posts={postList} />
+              <HorizontalBlogScroll posts={postList} />
             </div>
           </div>
         </section>

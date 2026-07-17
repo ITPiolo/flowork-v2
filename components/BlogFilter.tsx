@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import BlogPreview from "@/components/BlogPreview";
+import HorizontalBlogScroll from "@/components/HorizontalBlogScroll";
 import type { BlogPost } from "@/lib/supabase/types";
 
 export default function BlogFilter({ posts }: { posts: BlogPost[] }) {
@@ -32,7 +32,7 @@ export default function BlogFilter({ posts }: { posts: BlogPost[] }) {
         ))}
       </div>
       {filtered.length > 0 ? (
-        <BlogPreview posts={filtered} />
+        <HorizontalBlogScroll posts={filtered} />
       ) : (
         <p className="text-charcoal/40">No posts in this category yet.</p>
       )}
