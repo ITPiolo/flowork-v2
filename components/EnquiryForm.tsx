@@ -148,16 +148,14 @@ export default function EnquiryForm({
             </Field>
           </div>
 
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              disabled={status === "loading"}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-sage-500 text-cream px-8 py-4 text-sm font-medium hover:bg-sage-600 transition-colors disabled:opacity-60"
-            >
-              {status === "loading" ? "Sending..." : ctaLabel}
-              {status !== "loading" && <ArrowRight size={16} />}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="w-full flex items-center justify-center gap-2 rounded-full bg-sage-500 text-cream py-4 text-sm font-medium hover:bg-sage-600 transition-colors disabled:opacity-60"
+          >
+            {status === "loading" ? "Sending..." : ctaLabel}
+            {status !== "loading" && <ArrowRight size={16} />}
+          </button>
 
           <AnimatePresence>
             {status === "error" && (
