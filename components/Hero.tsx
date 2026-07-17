@@ -65,7 +65,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="eyebrow text-sage-300 mb-4 drop-shadow-sm"
+            className="eyebrow text-sage-300 mb-4 inline-block bg-charcoal/50 backdrop-blur-sm px-3 py-1.5 rounded-full"
           >
             Dubai Hills &amp; Business Bay
           </motion.p>
