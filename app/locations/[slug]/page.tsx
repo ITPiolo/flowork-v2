@@ -106,14 +106,9 @@ export default async function LocationPage({
         </section>
       )}
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 pb-20">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pb-20 max-w-2xl">
         <Reveal>
-          <div className="rounded-2xl bg-sage-50 p-8 md:p-12 max-w-2xl mx-auto">
-            <h2 className="font-display text-2xl md:text-3xl mb-6 text-center">
-              Let us find your ideal workspace
-            </h2>
-            <EnquiryForm defaultLocation={location.name} ctaLabel="Enquire Now" />
-          </div>
+          <EnquiryForm defaultLocation={location.name} ctaLabel="Enquire Now" />
         </Reveal>
       </section>
 
