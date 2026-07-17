@@ -26,6 +26,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://flowork-v2-gold.vercel.app"),
   title: {
     default: "flowork | Workspaces That Elevate Your Business",
     template: "%s | flowork",
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "flowork",
     type: "website",
+    images: ["/images/Reception-01-rd-1536x1182.jpg"],
   },
 };
 
