@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import VirtualTourButton from "@/components/VirtualTourButton";
 
 export default function HeroBlock({
   heading,
@@ -108,6 +109,7 @@ export default function HeroBlock({
                 {secondaryLabel}
               </Link>
             )}
+            <VirtualTourButton className="inline-flex items-center rounded-full border border-cream/40 bg-cream/5 backdrop-blur-sm text-cream px-6 py-3 text-sm font-medium hover:bg-cream/15 transition-colors" />
           </motion.div>
         </div>
 
@@ -180,6 +182,7 @@ export default function HeroBlock({
                 {secondaryLabel}
               </Link>
             )}
+            <VirtualTourButton />
           </motion.div>
 
           {slides.length > 1 && (

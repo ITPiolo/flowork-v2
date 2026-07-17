@@ -4,6 +4,7 @@ import Link from "next/link";
 import PuckImageField from "@/components/admin/PuckImageField";
 import HeroBlock from "@/components/blocks/HeroBlock";
 import TestimonialsBlock from "@/components/blocks/TestimonialsBlock";
+import TrustBarBlock from "@/components/blocks/TrustBarBlock";
 
 // Defines every block your client can drag onto the canvas in the
 // custom page builder (/admin/pages). Composite blocks (Hero, TextImage,
@@ -549,17 +550,7 @@ export const puckConfig: Config = {
         point3: "50-strong on-site team",
         point4: "24/7 secure access",
       },
-      render: (props: any) => (
-        <section className="border-y border-charcoal/10 bg-sage-50/50 py-14">
-          <div className="max-w-content mx-auto px-6 lg:px-8">
-            <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
-              {[props.point1, props.point2, props.point3, props.point4].filter(Boolean).map((p: string, i: number) => (
-                <span key={i} className="text-sm font-medium text-charcoal/60">{p}</span>
-              ))}
-            </div>
-          </div>
-        </section>
-      ),
+      render: (props: any) => <TrustBarBlock {...props} />,
     },
 
     WhyFlowork: {
