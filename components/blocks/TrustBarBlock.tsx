@@ -10,7 +10,7 @@ const ICONS = [Building2, MapPin, Users, ShieldCheck];
 // leading number ("1,000+") and the rest of the text, so the number
 // portion can animate counting up while the label stays static.
 function splitLeadingNumber(text: string): { number: string; rest: string } | null {
-  const match = text.match(/^([\d,]+)(\+|\/\d+)?/);
+  const match = text.match(/^([\d,]+)(\+)?/);
   if (!match) return null;
   const number = match[0];
   const rest = text.slice(number.length);
