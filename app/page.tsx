@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import PuckRenderer from "@/components/PuckRenderer";
 import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
 import EnquiryForm from "@/components/EnquiryForm";
-import HorizontalBlogScroll from "@/components/HorizontalBlogScroll";
+import BlogPreview from "@/components/BlogPreview";
+import PuckRenderer from "@/components/PuckRenderer";
 import type { Service, BlogPost, CustomPage } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -116,9 +116,9 @@ export default async function HomePage() {
                 Insights &amp; inspiration
               </h2>
             </Reveal>
-          </div>
-          <div className="mt-12">
-            <HorizontalBlogScroll posts={postList} />
+            <div className="mt-12">
+              <BlogPreview posts={postList} />
+            </div>
           </div>
         </section>
       )}
