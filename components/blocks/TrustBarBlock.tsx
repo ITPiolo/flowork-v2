@@ -83,9 +83,11 @@ function StatCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.06, duration: 0.5 }}
-      className="flex flex-col items-center text-center gap-2 py-8 px-4"
+      className="flex flex-col items-center justify-center text-center gap-3 py-8 px-4"
     >
-      <Icon size={22} className="text-sage-400" />
+      <span className="h-11 w-11 rounded-full bg-sage-500/10 flex items-center justify-center">
+        <Icon size={20} className="text-sage-400" />
+      </span>
       <span className="font-display text-3xl md:text-4xl text-cream">
         {display}
         {parsed.hasPlus ? "+" : ""}
