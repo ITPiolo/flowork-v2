@@ -25,8 +25,20 @@ export default function HorizontalBlogScroll({ posts }: { posts: BlogPost[] }) {
       }
     }
     measure();
+
+    // Re-measure whenever the track's actual size changes — catches
+    // images finishing their load, fonts swapping in, etc, which a
+    // one-time mount measurement can miss.
+    const observer = new ResizeObserver(measure);
+    if (trackRef.current) observer.observe(trackRef.current);
+
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    window.addEventListener("load", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("load", measure);
+    };
   }, [posts]);
 
   const { scrollYProgress } = useScroll({
@@ -81,7 +93,7 @@ export default function HorizontalBlogScroll({ posts }: { posts: BlogPost[] }) {
           <span className="eyebrow">From the blog</span>
           <h2 className="font-display text-3xl mt-2">Insights &amp; inspiration</h2>
         </div>
-        <motion.div ref={trackRef} style={{ x }} className="flex gap-5 px-6 lg:px-8">
+        <motion.div ref={trackRef} style={{ x, width: "max-content" }} className="flex gap-5 px-6 lg:px-8">
           {posts.map((post) => (
             <BlogCard key={post.id} post={post} className="shrink-0 w-[320px] sm:w-[360px]" />
           ))}
