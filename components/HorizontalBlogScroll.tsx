@@ -6,10 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { BlogPost } from "@/lib/supabase/types";
 
-// Apple-style "scroll-jacking" horizontal gallery: as the user scrolls
-// down through this section, the page appears to pin in place while
-// the cards slide horizontally instead — once they've scrolled through
-// all the cards, normal vertical scrolling continues.
+// Apple-style horizontal gallery. This time the heading pins together
+// with the cards as ONE unit (instead of the heading scrolling away
+// separately before the cards take over), which is what was causing
+// the overlap/blank-gap glitch before.
 
 export default function HorizontalBlogScroll({ posts }: { posts: BlogPost[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,9 +36,6 @@ export default function HorizontalBlogScroll({ posts }: { posts: BlogPost[] }) {
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -scrollDistance]);
 
-  // Reduced-motion / mobile fallback: on small screens, scroll-jacking
-  // feels broken rather than slick — just render a normal horizontal
-  // scroll strip the user can swipe, no pinning.
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -49,20 +46,44 @@ export default function HorizontalBlogScroll({ posts }: { posts: BlogPost[] }) {
 
   if (isMobile) {
     return (
-      <div className="flex gap-6 overflow-x-auto pb-4 px-6 -mx-6 snap-x snap-mandatory">
-        {posts.map((post) => (
-          <BlogCard key={post.id} post={post} className="snap-start shrink-0 w-[80vw]" />
-        ))}
+      <div className="max-w-content mx-auto px-6 lg:px-8 py-16">
+        <span className="eyebrow">From the blog</span>
+        <h2 className="font-display text-3xl mt-2 mb-8">Insights &amp; inspiration</h2>
+        <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6 snap-x snap-mandatory">
+          {posts.map((post) => (
+            <BlogCard key={post.id} post={post} className="snap-start shrink-0 w-[75vw]" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Only pin/scroll-jack if there's actually enough content to scroll
+  // through — otherwise just show a normal static row.
+  if (scrollDistance < 10) {
+    return (
+      <div className="max-w-content mx-auto px-6 lg:px-8 py-16">
+        <span className="eyebrow">From the blog</span>
+        <h2 className="font-display text-3xl mt-2 mb-8">Insights &amp; inspiration</h2>
+        <div className="flex gap-5 flex-wrap">
+          {posts.map((post) => (
+            <BlogCard key={post.id} post={post} className="w-[380px]" />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} style={{ height: `calc(100vh + ${scrollDistance}px)` }}>
-      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-        <motion.div ref={trackRef} style={{ x }} className="flex gap-8 px-6 lg:px-8">
+    <div ref={containerRef} style={{ height: `calc(70vh + ${scrollDistance}px)` }}>
+      <div className="sticky top-0 h-[70vh] min-h-[520px] flex flex-col justify-center overflow-hidden">
+        <div className="max-w-content mx-auto px-6 lg:px-8 w-full mb-6">
+          <span className="eyebrow">From the blog</span>
+          <h2 className="font-display text-3xl mt-2">Insights &amp; inspiration</h2>
+        </div>
+        <motion.div ref={trackRef} style={{ x }} className="flex gap-5 px-6 lg:px-8">
           {posts.map((post) => (
-            <BlogCard key={post.id} post={post} className="shrink-0 w-[85vw] sm:w-[480px] lg:w-[560px]" />
+            <BlogCard key={post.id} post={post} className="shrink-0 w-[320px] sm:w-[360px]" />
           ))}
         </motion.div>
       </div>
@@ -81,9 +102,9 @@ function BlogCard({ post, className }: { post: BlogPost; className?: string }) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
-      <p className="mt-4 text-xs text-sage-600 uppercase tracking-wide">{post.category}</p>
-      <h3 className="mt-1 font-display text-xl leading-snug">{post.title}</h3>
-      <p className="mt-2 text-sm text-charcoal/60 line-clamp-2">{post.excerpt}</p>
+      <p className="mt-3 text-xs text-sage-600 uppercase tracking-wide">{post.category}</p>
+      <h3 className="mt-1 font-display text-lg leading-snug">{post.title}</h3>
+      <p className="mt-1.5 text-sm text-charcoal/60 line-clamp-2">{post.excerpt}</p>
     </Link>
   );
 }

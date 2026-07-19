@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
 import EnquiryForm from "@/components/EnquiryForm";
-import BlogPreview from "@/components/BlogPreview";
+import HorizontalBlogScroll from "@/components/HorizontalBlogScroll";
 import PuckRenderer from "@/components/PuckRenderer";
 import type { Service, BlogPost, CustomPage } from "@/lib/supabase/types";
 
@@ -108,18 +108,8 @@ export default async function HomePage() {
       </section>
 
       {postList.length > 0 && (
-        <section className="bg-sage-50 py-20">
-          <div className="max-w-content mx-auto px-6 lg:px-8">
-            <Reveal>
-              <span className="eyebrow">From the blog</span>
-              <h2 className="font-display text-3xl md:text-4xl mt-2">
-                Insights &amp; inspiration
-              </h2>
-            </Reveal>
-            <div className="mt-12">
-              <BlogPreview posts={postList} />
-            </div>
-          </div>
+        <section className="bg-sage-50">
+          <HorizontalBlogScroll posts={postList} />
         </section>
       )}
     </>
