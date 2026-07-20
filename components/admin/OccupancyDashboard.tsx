@@ -1,6 +1,5 @@
 "use client";
 
-import OccupancyImport from "@/components/admin/OccupancyImport";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import FloorplanViewer from "@/components/admin/FloorplanViewer";
@@ -37,15 +36,21 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
   const counts = {
     occupied: units.filter((u) => computeStatus(u) === "occupied").length,
     expiring: units.filter((u) => computeStatus(u) === "expiring").length,
-    vacant: units.filter((u) => computeStatus(u) === "vacant").length,
+    month_to_month: units.filter((u) => computeStatus(u) === "month_to_month").length,
   };
-  const occRate = units.length > 0 ? Math.round(((counts.occupied + counts.expiring) / units.length) * 100) : 0;
+  const occRate = units.length > 0 ? Math.round(((counts.occupied + counts.month_to_month) / units.length) * 100) : 0;
+
+  // Units expiring soon that are still actually occupied (not vacant) —
+  // these are the ones worth a proactive call, unlike vacant units which
+  // are just available.
+  const expiringSoon = units
+    .filter((u) => computeStatus(u) === "expiring" && u.manual_status === "occupied" && u.renewal_date)
+    .sort((a, b) => new Date(a.renewal_date!).getTime() - new Date(b.renewal_date!).getTime());
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex gap-2">
-          {locations.map((loc) => (
+      <div className="flex gap-2 mb-6">
+        {locations.map((loc) => (
           <button
             key={loc.id}
             onClick={() => setActiveLocationId(loc.id)}
@@ -56,16 +61,40 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
             {loc.name}
           </button>
         ))}
-        </div>
-        {activeLocationId && <OccupancyImport locationId={activeLocationId} units={units} onImported={loadUnits} />}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard label="Total units" value={units.length} />
-        <StatCard label="Occupied" value={counts.occupied} color="#e05c6e" />
-        <StatCard label="Expiring soon" value={counts.expiring} color="#e8943a" />
-        <StatCard label="Vacant" value={counts.vacant} color="#5ab88a" />
-        <StatCard label="Occupancy rate" value={`${occRate}%`} highlight />
+        <StatCard label="Occupied" value={counts.occupied} color="#3B82F6" />
+        <StatCard label="Expiring" value={counts.expiring} color="#5ab88a" />
+        <StatCard label="Month-to-Month" value={counts.month_to_month} color="#e8943a" />
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <div className="md:col-span-2 rounded-xl bg-sage-500 text-cream p-4 flex items-center">
+          <div>
+            <p className="text-2xl font-display">{occRate}%</p>
+            <p className="text-xs opacity-80 mt-1">Occupancy rate</p>
+          </div>
+        </div>
+
+        <div className="rounded-xl bg-white border border-charcoal/10 p-4">
+          <p className="text-xs font-medium text-charcoal/70 mb-2">Expiring soon</p>
+          {expiringSoon.length === 0 ? (
+            <p className="text-xs text-charcoal/40">Nothing expiring in the next 60 days.</p>
+          ) : (
+            <div className="space-y-2 max-h-32 overflow-y-auto">
+              {expiringSoon.map((u) => (
+                <div key={u.id} className="flex items-center justify-between text-xs">
+                  <span className="text-charcoal/80 truncate pr-2">{u.company_name || `Unit ${u.unit_code}`}</span>
+                  <span className="text-charcoal/50 shrink-0">
+                    {new Date(u.renewal_date!).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {loading ? (

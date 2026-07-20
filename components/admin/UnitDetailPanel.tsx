@@ -53,12 +53,12 @@ export default function UnitDetailPanel({
   async function handleSave() {
     setSaving(true);
     const supabase = createClient();
-    const { category, manual_status, company_name, activity, view_description, workstations_total, workstations_occupied, size_sqm, size_sqft, listed_price, listed_ws_price, actual_rent, monthly_ws_rate, security_deposit, one_time_fee, start_date, end_date, renewal_date, comments } = form;
+    const { category, manual_status, lease_type, company_name, activity, view_description, workstations_total, workstations_occupied, size_sqm, size_sqft, listed_price, listed_ws_price, actual_rent, monthly_ws_rate, security_deposit, one_time_fee, start_date, end_date, renewal_date, comments } = form;
 
     await supabase
       .from("occupancy_units")
       .update({
-        category, manual_status, company_name, activity, view_description,
+        category, manual_status, lease_type, company_name, activity, view_description,
         workstations_total, workstations_occupied, size_sqm, size_sqft,
         listed_price, listed_ws_price, actual_rent, monthly_ws_rate,
         security_deposit, one_time_fee, start_date, end_date, renewal_date, comments,
@@ -78,6 +78,7 @@ export default function UnitDetailPanel({
       .from("occupancy_units")
       .update({
         manual_status: "vacant",
+        lease_type: "fixed",
         company_name: null,
         activity: null,
         start_date: null,
@@ -133,6 +134,12 @@ export default function UnitDetailPanel({
                 <select value={form.manual_status} onChange={(e) => update("manual_status", e.target.value as any)} className="input">
                   <option value="occupied">Occupied</option>
                   <option value="vacant">Vacant</option>
+                </select>
+              </Row>
+              <Row label="Lease type">
+                <select value={form.lease_type} onChange={(e) => update("lease_type", e.target.value as any)} className="input">
+                  <option value="fixed">Fixed-term</option>
+                  <option value="month_to_month">Month-to-Month</option>
                 </select>
               </Row>
               <Row label="Company / Occupant">
@@ -215,6 +222,7 @@ export default function UnitDetailPanel({
               <DetailRow label="Company" value={unit.company_name} />
               <DetailRow label="Activity" value={unit.activity} />
               <DetailRow label="Category" value={unit.category} />
+              <DetailRow label="Lease type" value={unit.lease_type === "month_to_month" ? "Month-to-Month" : "Fixed-term"} />
               <DetailRow label="View" value={unit.view_description} />
               <DetailRow label="Workstations" value={unit.workstations_total ? `${unit.workstations_occupied ?? 0} / ${unit.workstations_total}` : null} />
               <DetailRow label="Size" value={unit.size_sqm ? `${unit.size_sqm} sqm (${unit.size_sqft ?? "—"} sqft)` : null} />

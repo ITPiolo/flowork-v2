@@ -16,7 +16,7 @@ export default function FloorplanViewer({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"all" | "occupied" | "expiring" | "vacant">("all");
+  const [filter, setFilter] = useState<"all" | "occupied" | "expiring" | "month_to_month">("all");
 
   if (!location.floorplan_image_url || !location.floorplan_width || !location.floorplan_height) {
     return (
@@ -34,7 +34,7 @@ export default function FloorplanViewer({
   const counts = {
     occupied: units.filter((u) => computeStatus(u) === "occupied").length,
     expiring: units.filter((u) => computeStatus(u) === "expiring").length,
-    vacant: units.filter((u) => computeStatus(u) === "vacant").length,
+    month_to_month: units.filter((u) => computeStatus(u) === "month_to_month").length,
   };
 
   const visibleUnits = filter === "all" ? units : units.filter((u) => computeStatus(u) === filter);
@@ -42,7 +42,7 @@ export default function FloorplanViewer({
   return (
     <div>
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        {(["all", "occupied", "expiring", "vacant"] as const).map((f) => (
+        {(["all", "occupied", "expiring", "month_to_month"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}

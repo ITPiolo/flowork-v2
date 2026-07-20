@@ -104,6 +104,7 @@ export type OccupancyUnit = {
   unit_code: string;
   category: "Private Office" | "Dedicated Desk" | "Flexi Desk" | "Meeting Room" | "Phone Booth";
   manual_status: "occupied" | "vacant";
+  lease_type: "fixed" | "month_to_month";
   company_name: string | null;
   activity: string | null;
   view_description: string | null;
