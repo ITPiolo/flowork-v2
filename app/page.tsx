@@ -16,7 +16,7 @@ export default async function HomePage() {
   const [{ data: homePageData }, { data: services }, { data: posts }] = await Promise.all([
     supabase.from("custom_pages").select("*").eq("slug", "__home__").eq("published", true).single(),
     supabase.from("services").select("*").order("display_order").limit(4),
-    supabase.from("blog_posts").select("*").order("published_at", { ascending: false }).limit(6),
+    supabase.from("blog_posts").select("*").order("published_at", { ascending: false }).limit(3),
   ]);
 
   const homePage = homePageData as CustomPage | null;
@@ -25,8 +25,6 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Editable via /admin/pages → Homepage — drag, reorder, or edit
-          the Hero, Trust Bar, Why Flowork, and Testimonials blocks here. */}
       {homePage ? (
         <PuckRenderer data={homePage.content} />
       ) : (
@@ -36,8 +34,6 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* Live data — always pulls current Services, not part of the
-          editable canvas since it's already editable via /admin/services */}
       <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
         <Reveal>
           <span className="eyebrow">What we offer</span>
@@ -110,10 +106,12 @@ export default async function HomePage() {
       {postList.length > 0 && (
         <section className="bg-sage-50 py-20">
           <div className="max-w-content mx-auto px-6 lg:px-8">
-            <span className="eyebrow">From the blog</span>
-            <h2 className="font-display text-3xl md:text-4xl mt-2 mb-12">
-              Insights &amp; inspiration
-            </h2>
+            <Reveal>
+              <span className="eyebrow">From the blog</span>
+              <h2 className="font-display text-3xl md:text-4xl mt-2 mb-12">
+                Insights &amp; inspiration
+              </h2>
+            </Reveal>
             <BlogPreview posts={postList} />
           </div>
         </section>
