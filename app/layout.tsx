@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { createClient } from "@/lib/supabase/server";
 import type { Location } from "@/lib/supabase/types";
 import StructuredData from "@/components/StructuredData";
+import TrackingPixels from "@/components/TrackingPixels";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
