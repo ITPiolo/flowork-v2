@@ -62,6 +62,9 @@ function StatCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startCounting, parsed?.target]);
 
+  const cardClasses =
+    "relative flex flex-col items-center justify-center text-center gap-2.5 rounded-2xl bg-cream/[0.04] border border-cream/10 px-4 py-7 sm:py-8";
+
   if (!parsed) {
     return (
       <motion.div
@@ -69,7 +72,7 @@ function StatCard({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: index * 0.06, duration: 0.5 }}
-        className="flex flex-col items-center text-center gap-2 py-8 px-4"
+        className={cardClasses}
       >
         <Icon size={22} className="text-sage-400" />
         <span className="text-sm font-medium text-cream/80">{text}</span>
@@ -83,17 +86,17 @@ function StatCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.06, duration: 0.5 }}
-      className="flex flex-col items-center justify-center text-center gap-3 py-8 px-4"
+      className={cardClasses}
     >
-      <span className="h-11 w-11 rounded-full bg-sage-500/20 flex items-center justify-center">
+      <span className="h-12 w-12 rounded-full bg-sage-500/15 ring-1 ring-sage-400/20 flex items-center justify-center">
         <Icon size={20} className="text-sage-300" />
       </span>
-      <span className="font-display text-3xl md:text-4xl text-cream">
+      <span className="font-display text-3xl sm:text-4xl leading-none text-cream tabular-nums">
         {display}
         {parsed.hasPlus ? "+" : ""}
         {parsed.displaySuffix}
       </span>
-      <span className="text-xs md:text-sm text-cream/60">{parsed.label}</span>
+      <span className="text-xs sm:text-sm text-cream/55 leading-snug max-w-[9rem]">{parsed.label}</span>
     </motion.div>
   );
 }
@@ -117,9 +120,9 @@ export default function TrustBarBlock({
   const inView = useInView(sectionRef, { once: true, margin: "-60px" });
 
   return (
-    <section ref={sectionRef} className="bg-charcoal py-4">
-      <div className="max-w-content mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-cream/10 border-y border-cream/10">
+    <section ref={sectionRef} className="bg-charcoal py-12 sm:py-14">
+      <div className="max-w-content mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {points.map((p, i) => (
             <StatCard key={i} text={p} icon={ICONS[i] ?? Building2} index={i} startCounting={inView} />
           ))}
