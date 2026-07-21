@@ -139,6 +139,18 @@ export type OccupancyNote = {
   created_at: string;
 };
 
+export type OccupancyShareLink = {
+  id: string;
+  location_id: string;
+  token: string;
+  label: string | null;
+  password_hash: string;
+  password_salt: string;
+  expires_at: string | null;
+  revoked_at: string | null;
+  created_at: string;
+};
+
 // Minimal Database type — expand with generated types via
 // `supabase gen types typescript` once the project is linked.
 export type Database = {
@@ -153,6 +165,7 @@ export type Database = {
       proposal_library: { Row: ProposalLibraryItem; Insert: Partial<ProposalLibraryItem>; Update: Partial<ProposalLibraryItem> };
       occupancy_units: { Row: OccupancyUnit; Insert: Partial<OccupancyUnit>; Update: Partial<OccupancyUnit> };
       occupancy_notes: { Row: OccupancyNote; Insert: Partial<OccupancyNote>; Update: Partial<OccupancyNote> };
+      occupancy_share_links: { Row: OccupancyShareLink; Insert: Partial<OccupancyShareLink>; Update: Partial<OccupancyShareLink> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };

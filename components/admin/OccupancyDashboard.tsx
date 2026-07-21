@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import FloorplanViewer from "@/components/admin/FloorplanViewer";
 import UnitDetailPanel from "@/components/admin/UnitDetailPanel";
 import OccupancyImport from "@/components/admin/OccupancyImport";
+import ShareLinkManager from "@/components/admin/ShareLinkManager";
 import { computeStatus } from "@/lib/occupancyStatus";
 import type { Location, OccupancyUnit } from "@/lib/supabase/types";
 
@@ -75,11 +76,14 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
         </div>
 
         {activeLocationId && (
-          <OccupancyImport
-            locationId={activeLocationId}
-            units={units}
-            onImported={loadUnits}
-          />
+          <div className="flex items-center gap-2">
+            <ShareLinkManager locationId={activeLocationId} />
+            <OccupancyImport
+              locationId={activeLocationId}
+              units={units}
+              onImported={loadUnits}
+            />
+          </div>
         )}
       </div>
 
