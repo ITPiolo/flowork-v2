@@ -22,11 +22,13 @@ export default function EnquiryForm({
   defaultLocation = "Vision Tower Business Bay",
   heading = "Let us find your ideal workspace",
   ctaLabel = "Enquire Now",
+  anchorId = "enquire",
 }: {
   defaultService?: string;
   defaultLocation?: string;
   heading?: string;
   ctaLabel?: string;
+  anchorId?: string | null;
 }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -57,7 +59,7 @@ export default function EnquiryForm({
 
   return (
     <div
-      id="enquire"
+      {...(anchorId ? { id: anchorId } : {})}
       className="rounded-3xl bg-charcoal text-cream p-6 sm:p-8 md:p-10"
     >
       <div className="mb-8">

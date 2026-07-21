@@ -17,6 +17,7 @@ const links = [
   { href: "/admin/newsletter", label: "Newsletter" },
   { href: "/admin/proposals", label: "Proposal Library" },
   { href: "/admin/occupancy", label: "Occupancy" },
+  { href: "/admin/analytics", label: "Analytics" },
 ];
 
 export default function AdminSidebar() {

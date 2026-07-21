@@ -139,6 +139,17 @@ export type OccupancyNote = {
   created_at: string;
 };
 
+export type OccupancySnapshot = {
+  id: string;
+  location_id: string;
+  snapshot_date: string;
+  total_units: number;
+  occupied_count: number;
+  expiring_count: number;
+  month_to_month_count: number;
+  created_at: string;
+};
+
 export type OccupancyShareLink = {
   id: string;
   location_id: string;
@@ -166,6 +177,7 @@ export type Database = {
       occupancy_units: { Row: OccupancyUnit; Insert: Partial<OccupancyUnit>; Update: Partial<OccupancyUnit> };
       occupancy_notes: { Row: OccupancyNote; Insert: Partial<OccupancyNote>; Update: Partial<OccupancyNote> };
       occupancy_share_links: { Row: OccupancyShareLink; Insert: Partial<OccupancyShareLink>; Update: Partial<OccupancyShareLink> };
+      occupancy_snapshots: { Row: OccupancySnapshot; Insert: Partial<OccupancySnapshot>; Update: Partial<OccupancySnapshot> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };

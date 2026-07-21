@@ -5,9 +5,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import type { Location } from "@/lib/supabase/types";
+import { useEnquiryDrawer } from "@/lib/EnquiryDrawerContext";
 
 export default function Header({ locations }: { locations: Location[] }) {
   const [open, setOpen] = useState(false);
+  const { openDrawer } = useEnquiryDrawer();
 
   const nav = [
     { label: "Home", href: "/" },
@@ -67,12 +69,12 @@ export default function Header({ locations }: { locations: Location[] }) {
           ))}
         </nav>
 
-        <Link
-          href="/#enquire"
+        <button
+          onClick={openDrawer}
           className="hidden lg:inline-flex items-center rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium hover:bg-sage-600 transition-colors"
         >
           Enquire Now
-        </Link>
+        </button>
 
         <button
           className="lg:hidden text-charcoal"
@@ -106,13 +108,15 @@ export default function Header({ locations }: { locations: Location[] }) {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                href="/#enquire"
-                onClick={() => setOpen(false)}
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  openDrawer();
+                }}
                 className="inline-flex justify-center rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium"
               >
                 Enquire Now
-              </Link>
+              </button>
             </nav>
           </motion.div>
         )}

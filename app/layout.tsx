@@ -12,6 +12,8 @@ import { createClient } from "@/lib/supabase/server";
 import type { Location } from "@/lib/supabase/types";
 import StructuredData from "@/components/StructuredData";
 import TrackingPixels from "@/components/TrackingPixels";
+import { EnquiryDrawerProvider } from "@/lib/EnquiryDrawerContext";
+import EnquirySidebar from "@/components/EnquirySidebar";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -64,12 +66,15 @@ export default async function RootLayout({
         </a>
         <Preloader />
         <ScrollSpine />
-        <Header locations={(locations ?? []) as Location[]} />
-        <main id="main-content">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
-        <WhatsAppButton />
+        <EnquiryDrawerProvider>
+          <Header locations={(locations ?? []) as Location[]} />
+          <main id="main-content">
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer />
+          <WhatsAppButton />
+          <EnquirySidebar />
+        </EnquiryDrawerProvider>
         <Analytics />
       </body>
     </html>
