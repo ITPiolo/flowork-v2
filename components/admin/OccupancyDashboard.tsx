@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import FloorplanViewer from "@/components/admin/FloorplanViewer";
 import UnitDetailPanel from "@/components/admin/UnitDetailPanel";
+import OccupancyImport from "@/components/admin/OccupancyImport";
 import { computeStatus } from "@/lib/occupancyStatus";
 import type { Location, OccupancyUnit } from "@/lib/supabase/types";
 
@@ -49,18 +50,28 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
 
   return (
     <div>
-      <div className="flex gap-2 mb-6">
-        {locations.map((loc) => (
-          <button
-            key={loc.id}
-            onClick={() => setActiveLocationId(loc.id)}
-            className={`text-sm px-4 py-2 rounded-full font-medium ${
-              activeLocationId === loc.id ? "bg-charcoal text-cream" : "bg-white border border-charcoal/10 text-charcoal/60"
-            }`}
-          >
-            {loc.name}
-          </button>
-        ))}
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <div className="flex gap-2">
+          {locations.map((loc) => (
+            <button
+              key={loc.id}
+              onClick={() => setActiveLocationId(loc.id)}
+              className={`text-sm px-4 py-2 rounded-full font-medium ${
+                activeLocationId === loc.id ? "bg-charcoal text-cream" : "bg-white border border-charcoal/10 text-charcoal/60"
+              }`}
+            >
+              {loc.name}
+            </button>
+          ))}
+        </div>
+
+        {activeLocationId && (
+          <OccupancyImport
+            locationId={activeLocationId}
+            units={units}
+            onImported={loadUnits}
+          />
+        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">

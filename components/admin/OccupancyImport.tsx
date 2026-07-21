@@ -135,10 +135,13 @@ export default function OccupancyImport({
 
           const payload: Record<string, unknown> = {};
 
-          // Status: use an explicit "status" column if present, otherwise
-          // infer it — a filled-in company name means occupied.
-          if (explicitStatus) {
-            payload.manual_status = explicitStatus.toLowerCase() === "occupied" ? "occupied" : "vacant";
+          // Status: only "Occupied" or "Vacant" are real explicit values —
+          // anything else (e.g. "Expiring", which is a computed label, not
+          // something the spreadsheet should set) is ignored in favor of
+          // inferring from whether a company name is filled in.
+          const normalizedStatus = explicitStatus.toLowerCase();
+          if (normalizedStatus === "occupied" || normalizedStatus === "vacant") {
+            payload.manual_status = normalizedStatus;
           } else {
             payload.manual_status = companyName ? "occupied" : "vacant";
           }
