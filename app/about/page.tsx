@@ -47,12 +47,10 @@ export default function AboutPage() {
         </Reveal>
       </section>
 
-      <section className="bg-charcoal">
-        <div className="max-w-content mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 divide-x divide-cream/10">
+      <section className="bg-charcoal py-12 sm:py-14">
+        <div className="max-w-content mx-auto px-5 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {STATS.map((s) => (
-            <div key={s.label} className="py-10">
-              <AnimatedStat value={s.value} label={s.label} />
-            </div>
+            <AnimatedStat key={s.label} value={s.value} label={s.label} />
           ))}
         </div>
       </section>

@@ -32,13 +32,13 @@ export default function AnimatedStat({
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="text-center px-4"
+      className="rounded-2xl bg-cream/10 border border-cream/15 px-4 py-7 sm:py-8 text-center"
     >
-      <span ref={ref} className="font-display text-4xl md:text-5xl text-cream">
+      <span ref={ref} className="font-display text-3xl sm:text-4xl md:text-5xl text-cream tabular-nums">
         {display}
         {suffix}
       </span>
-      <p className="mt-2 text-sm text-cream/80">{label}</p>
+      <p className="mt-2 text-xs sm:text-sm text-cream/70 leading-snug">{label}</p>
     </motion.div>
   );
 }
