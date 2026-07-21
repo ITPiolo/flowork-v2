@@ -55,7 +55,7 @@ export default function UnitDetailPanel({
     const supabase = createClient();
     const { category, manual_status, lease_type, company_name, activity, view_description, workstations_total, workstations_occupied, size_sqm, size_sqft, listed_price, listed_ws_price, actual_rent, monthly_ws_rate, security_deposit, one_time_fee, start_date, end_date, renewal_date, comments } = form;
 
-    await supabase
+    const { error } = await supabase
       .from("occupancy_units")
       .update({
         category, manual_status, lease_type, company_name, activity, view_description,
@@ -66,6 +66,12 @@ export default function UnitDetailPanel({
       .eq("id", unit.id);
 
     setSaving(false);
+
+    if (error) {
+      window.alert(`Save failed: ${error.message}`);
+      return;
+    }
+
     setEditing(false);
     onUpdated();
   }

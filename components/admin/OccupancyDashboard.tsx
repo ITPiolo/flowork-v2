@@ -25,8 +25,17 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
       .select("*")
       .eq("location_id", activeLocationId)
       .order("unit_code");
-    setUnits((data ?? []) as OccupancyUnit[]);
+    const freshUnits = (data ?? []) as OccupancyUnit[];
+    setUnits(freshUnits);
     setLoading(false);
+
+    // Keep the open detail panel in sync with what was just saved —
+    // otherwise it keeps showing stale data even though the save
+    // succeeded, making edits look like they silently failed.
+    setSelectedUnit((prev) => {
+      if (!prev) return prev;
+      return freshUnits.find((u) => u.id === prev.id) ?? prev;
+    });
   }
 
   useEffect(() => {
