@@ -121,6 +121,7 @@ export type OccupancyUnit = {
   start_date: string | null;
   end_date: string | null;
   renewal_date: string | null;
+  renewal_notified_at: string | null;
   comments: string | null;
   hotspot_x: number;
   hotspot_y: number;

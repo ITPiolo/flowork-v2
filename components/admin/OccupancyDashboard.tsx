@@ -54,8 +54,8 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
   // these are the ones worth a proactive call, unlike vacant units which
   // are just available.
   const expiringSoon = units
-    .filter((u) => computeStatus(u) === "expiring" && u.manual_status === "occupied" && u.renewal_date)
-    .sort((a, b) => new Date(a.renewal_date!).getTime() - new Date(b.renewal_date!).getTime());
+    .filter((u) => computeStatus(u) === "expiring" && u.manual_status === "occupied" && u.end_date)
+    .sort((a, b) => new Date(a.end_date!).getTime() - new Date(b.end_date!).getTime());
 
   return (
     <div>
@@ -101,14 +101,16 @@ export default function OccupancyDashboard({ locations }: { locations: Location[
         <div className="rounded-xl bg-white border border-charcoal/10 p-4">
           <p className="text-xs font-medium text-charcoal/70 mb-2">Expiring soon</p>
           {expiringSoon.length === 0 ? (
-            <p className="text-xs text-charcoal/40">Nothing expiring in the next 60 days.</p>
+            <p className="text-xs text-charcoal/40">Nothing expiring in the next 2 months.</p>
           ) : (
             <div className="space-y-2 max-h-32 overflow-y-auto">
               {expiringSoon.map((u) => (
                 <div key={u.id} className="flex items-center justify-between text-xs">
-                  <span className="text-charcoal/80 truncate pr-2">{u.company_name || `Unit ${u.unit_code}`}</span>
+                  <span className="text-charcoal/80 truncate pr-2">
+                    Unit {u.unit_code} — {u.company_name || "—"}
+                  </span>
                   <span className="text-charcoal/50 shrink-0">
-                    {new Date(u.renewal_date!).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                    {new Date(u.end_date!).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                   </span>
                 </div>
               ))}

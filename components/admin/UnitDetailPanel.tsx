@@ -55,13 +55,19 @@ export default function UnitDetailPanel({
     const supabase = createClient();
     const { category, manual_status, lease_type, company_name, activity, view_description, workstations_total, workstations_occupied, size_sqm, size_sqft, listed_price, listed_ws_price, actual_rent, monthly_ws_rate, security_deposit, one_time_fee, start_date, end_date, renewal_date, comments } = form;
 
+    // Changing the end date means a new/updated contract period — clear
+    // the "already notified" flag so the renewal-check email can flag it
+    // again if it falls within the notification window.
+    const renewal_notified_at = end_date !== unit.end_date ? null : unit.renewal_notified_at;
+
     const { error } = await supabase
       .from("occupancy_units")
       .update({
         category, manual_status, lease_type, company_name, activity, view_description,
         workstations_total, workstations_occupied, size_sqm, size_sqft,
         listed_price, listed_ws_price, actual_rent, monthly_ws_rate,
-        security_deposit, one_time_fee, start_date, end_date, renewal_date, comments,
+        security_deposit, one_time_fee, start_date, end_date, renewal_date,
+        renewal_notified_at, comments,
       } as never)
       .eq("id", unit.id);
 
