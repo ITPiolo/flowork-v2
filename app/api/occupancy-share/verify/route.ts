@@ -3,10 +3,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyPassword } from "@/lib/shareLinkAuth";
 
 // Public endpoint — no admin session required. Checks a share link's
-// token + password and, if valid, returns a read-only, non-sensitive
-// view of the floor plan (status/category/size only — never company
-// names, rent, or contract dates), matching the same privacy rule used
-// for the public /units/[unitId] QR pages.
+// token + password and, if valid, returns a read-only view of the floor
+// plan, including company names and expiry dates — unlike the public
+// /units/[unitId] QR pages, this is a deliberately invite-only link
+// (password + revocable), so it's treated as an internal share rather
+// than public information.
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
 
   const { data: units } = await admin
     .from("occupancy_units")
-    .select("id, unit_code, category, manual_status, lease_type, end_date, workstations_total, size_sqm, size_sqft, hotspot_x, hotspot_y, hotspot_w, hotspot_h")
+    .select("id, unit_code, category, manual_status, lease_type, company_name, end_date, workstations_total, size_sqm, size_sqft, hotspot_x, hotspot_y, hotspot_w, hotspot_h")
     .eq("location_id", (link as any).location_id);
 
   return NextResponse.json({
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
       category: u.category,
       manual_status: u.manual_status,
       lease_type: u.lease_type,
+      company_name: u.company_name,
       end_date: u.end_date,
       workstations_total: u.workstations_total,
       size_sqm: u.size_sqm,

@@ -10,6 +10,7 @@ type SharedUnit = {
   category: string;
   manual_status: "occupied" | "vacant";
   lease_type: "fixed" | "month_to_month";
+  company_name: string | null;
   end_date: string | null;
   workstations_total: number | null;
   size_sqm: number | null;
@@ -49,6 +50,10 @@ export default function SharedFloorplanViewer({
   };
   const visibleUnits = filter === "all" ? units : units.filter((u) => computeStatus(u as never) === filter);
 
+  const expiringSoon = units
+    .filter((u) => computeStatus(u as never) === "expiring" && u.manual_status === "occupied" && u.end_date)
+    .sort((a, b) => new Date(a.end_date!).getTime() - new Date(b.end_date!).getTime());
+
   return (
     <div>
       <h1 className="font-display text-2xl mb-4">{location.name} — Floor Plan</h1>
@@ -67,6 +72,24 @@ export default function SharedFloorplanViewer({
           </button>
         ))}
       </div>
+
+      {expiringSoon.length > 0 && (
+        <div className="rounded-xl bg-white border border-charcoal/10 p-4 mb-4">
+          <p className="text-xs font-medium text-charcoal/70 mb-2">Expiring soon</p>
+          <div className="space-y-2 max-h-32 overflow-y-auto">
+            {expiringSoon.map((u) => (
+              <div key={u.id} className="flex items-center justify-between text-xs">
+                <span className="text-charcoal/80 truncate pr-2">
+                  Unit {u.unit_code} — {u.company_name || "—"}
+                </span>
+                <span className="text-charcoal/50 shrink-0">
+                  {new Date(u.end_date!).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="relative w-full rounded-xl overflow-hidden border border-charcoal/10 bg-charcoal/5" style={{ aspectRatio }}>
         <Image src={location.floorplan_image_url} alt={`${location.name} floor plan`} fill className="object-contain" priority />
@@ -87,7 +110,7 @@ export default function SharedFloorplanViewer({
                 borderRadius: 3,
                 cursor: "pointer",
               }}
-              title={`Unit ${unit.unit_code}`}
+              title={`Unit ${unit.unit_code}${unit.company_name ? " — " + unit.company_name : ""}`}
             />
           );
         })}
@@ -103,6 +126,9 @@ export default function SharedFloorplanViewer({
               <p className="font-display text-lg">Unit {selected.unit_code}</p>
             </div>
             <p className="text-sm text-charcoal/70 mb-1">{STATUS_LABELS[computeStatus(selected as never)]}</p>
+            {selected.company_name ? (
+              <p className="text-sm text-charcoal/80 font-medium">{selected.company_name}</p>
+            ) : null}
             <p className="text-sm text-charcoal/60">{selected.category}</p>
             {selected.workstations_total ? (
               <p className="text-sm text-charcoal/60">{selected.workstations_total} workstations</p>
@@ -111,6 +137,9 @@ export default function SharedFloorplanViewer({
               <p className="text-sm text-charcoal/60">
                 {selected.size_sqm} sqm ({selected.size_sqft ?? "—"} sqft)
               </p>
+            ) : null}
+            {selected.end_date ? (
+              <p className="text-sm text-charcoal/60">Ends {new Date(selected.end_date).toLocaleDateString()}</p>
             ) : null}
             <button
               onClick={() => setSelected(null)}
