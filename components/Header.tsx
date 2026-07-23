@@ -30,6 +30,7 @@ export default function Header({ locations }: { locations: Location[] }) {
       children: [{ label: "Ejari Packages", href: "/ejari" }],
     },
     { label: "Podcast Room", href: "/services/podcast-room" },
+    { label: "Book a Room", href: "/book" },
   ];
 
   return (

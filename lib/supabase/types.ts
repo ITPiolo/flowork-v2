@@ -131,6 +131,45 @@ export type OccupancyUnit = {
   updated_at: string;
 };
 
+export type BookableRoom = {
+  id: string;
+  location_id: string;
+  name: string;
+  category: "Meeting Room" | "Boardroom" | "Podcast Room";
+  capacity: number | null;
+  hourly_rate_aed: number;
+  photo_url: string | null;
+  is_active: boolean;
+  created_at: string;
+};
+
+export type BookingSettingsRow = {
+  id: string;
+  location_id: string;
+  buffer_minutes: number;
+  slot_increment_minutes: number;
+  min_booking_minutes: number;
+  max_booking_minutes: number | null;
+  opening_time: string;
+  closing_time: string;
+};
+
+export type RoomBooking = {
+  id: string;
+  room_id: string;
+  starts_at: string;
+  ends_at: string;
+  status: "pending" | "confirmed" | "cancelled";
+  full_name: string;
+  email: string;
+  phone: string | null;
+  company_name: string | null;
+  amount_aed: number;
+  stripe_session_id: string | null;
+  stripe_payment_intent_id: string | null;
+  created_at: string;
+};
+
 export type OccupancyNote = {
   id: string;
   unit_id: string;
@@ -178,6 +217,9 @@ export type Database = {
       occupancy_notes: { Row: OccupancyNote; Insert: Partial<OccupancyNote>; Update: Partial<OccupancyNote> };
       occupancy_share_links: { Row: OccupancyShareLink; Insert: Partial<OccupancyShareLink>; Update: Partial<OccupancyShareLink> };
       occupancy_snapshots: { Row: OccupancySnapshot; Insert: Partial<OccupancySnapshot>; Update: Partial<OccupancySnapshot> };
+      bookable_rooms: { Row: BookableRoom; Insert: Partial<BookableRoom>; Update: Partial<BookableRoom> };
+      booking_settings: { Row: BookingSettingsRow; Insert: Partial<BookingSettingsRow>; Update: Partial<BookingSettingsRow> };
+      room_bookings: { Row: RoomBooking; Insert: Partial<RoomBooking>; Update: Partial<RoomBooking> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };
     };
   };
