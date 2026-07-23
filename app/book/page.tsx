@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Reveal from "@/components/Reveal";
 import BookingFlow from "@/components/BookingFlow";
 import type { Location, BookableRoom } from "@/lib/supabase/types";
@@ -13,7 +14,12 @@ export const dynamic = "force-dynamic";
 export default async function BookPage() {
   const supabase = await createClient();
   const { data: locationsData } = await supabase.from("locations").select("*").order("display_order");
-  const { data: roomsData } = await supabase
+
+  // bookable_rooms has RLS enabled with no public policy (only server
+  // routes with the service role key can read it) — use the admin
+  // client here, not the regular RLS-respecting one.
+  const admin = createAdminClient();
+  const { data: roomsData } = await admin
     .from("bookable_rooms")
     .select("*")
     .eq("is_active", true)
