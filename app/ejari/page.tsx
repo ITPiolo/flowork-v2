@@ -27,12 +27,12 @@ export default async function EjariPage() {
       </section>
 
       <section className="max-w-content mx-auto px-6 lg:px-8 pb-20">
-        <div className="grid md:grid-cols-3 gap-8 items-start">
+        <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {packages.map((pkg, i) => (
-            <Reveal key={pkg.id} delay={i * 0.1}>
+            <Reveal key={pkg.id} delay={i * 0.1} className="h-full">
               <div
-                className={`rounded-2xl overflow-hidden border ${
-                  pkg.featured ? "border-sage-500 shadow-xl scale-[1.03]" : "border-charcoal/10"
+                className={`h-full flex flex-col rounded-2xl overflow-hidden border ${
+                  pkg.featured ? "border-sage-500 shadow-xl md:-translate-y-3" : "border-charcoal/10"
                 }`}
               >
                 <div
@@ -42,7 +42,7 @@ export default async function EjariPage() {
                 >
                   {pkg.name}
                 </div>
-                <div className="p-8 bg-white">
+                <div className="p-8 bg-white flex-1 flex flex-col">
                   <p className="text-center">
                     <span className="text-xs align-top mr-1">AED</span>
                     <span className="font-display text-4xl">
@@ -52,7 +52,7 @@ export default async function EjariPage() {
                   <p className="text-center text-xs text-charcoal/50 mb-6">
                     {pkg.billing_period}
                   </p>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 flex-1">
                     {pkg.features.map((f) => (
                       <li key={f} className="flex items-start gap-2 text-sm text-charcoal/70">
                         <Check size={15} className="text-sage-500 mt-0.5 shrink-0" />
