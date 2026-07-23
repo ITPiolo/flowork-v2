@@ -99,7 +99,7 @@ export default function SharedFloorplanViewer({
             <button
               key={unit.id}
               onClick={() => setSelected(unit)}
-              className="absolute transition-opacity hover:opacity-90"
+              className="absolute transition-all duration-200 hover:opacity-90 hover:scale-[1.04]"
               style={{
                 left: `${unit.hotspot_x}%`,
                 top: `${unit.hotspot_y}%`,

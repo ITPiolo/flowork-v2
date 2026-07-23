@@ -83,16 +83,18 @@ export default function FloorplanViewer({
               onClick={() => onUnitClick(unit)}
               onMouseEnter={() => setHoveredId(unit.id)}
               onMouseLeave={() => setHoveredId(null)}
-              className="absolute transition-opacity"
+              className="absolute transition-all duration-200"
               style={{
                 left: `${unit.hotspot_x}%`,
                 top: `${unit.hotspot_y}%`,
                 width: `${unit.hotspot_w}%`,
                 height: `${unit.hotspot_h}%`,
                 background: STATUS_COLORS[status],
-                opacity: isHovered ? 0.85 : 0.55,
+                opacity: isHovered ? 0.9 : 0.55,
                 borderRadius: 3,
                 cursor: "pointer",
+                boxShadow: isHovered ? `0 0 0 3px ${STATUS_COLORS[status]}55` : "none",
+                transform: isHovered ? "scale(1.04)" : "scale(1)",
               }}
               title={`Unit ${unit.unit_code}${unit.company_name ? " — " + unit.company_name : ""}`}
             />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Users } from "lucide-react";
 import {
   DEFAULT_BOOKING_SETTINGS,
@@ -181,13 +182,24 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
               ))}
             </div>
 
+            <AnimatePresence>
             {start && (
-              <>
+              <motion.div
+                key={start.getTime()}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="overflow-hidden"
+              >
                 <p className="text-sm font-medium text-charcoal mb-3">Choose an end time</p>
                 <div className="flex flex-wrap gap-2">
-                  {endOptions.map((m) => (
-                    <button
+                  {endOptions.map((m, i) => (
+                    <motion.button
                       key={m.getTime()}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.03, duration: 0.25 }}
                       onClick={() => setEnd(m)}
                       className={`text-sm rounded-full px-4 py-2 border transition-colors ${
                         end?.getTime() === m.getTime()
@@ -196,11 +208,12 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
                       }`}
                     >
                       {fmtTime(m)}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
-              </>
+              </motion.div>
             )}
+            </AnimatePresence>
           </>
         )}
       </div>

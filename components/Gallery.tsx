@@ -32,7 +32,7 @@ export default function Gallery({
           <button
             key={src + i}
             onClick={() => setOpenIndex(i)}
-            className="relative aspect-square rounded-xl overflow-hidden group"
+            className="relative aspect-square rounded-xl overflow-hidden group transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
           >
             <Image
               src={src}

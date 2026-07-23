@@ -31,7 +31,7 @@ export default async function EjariPage() {
           {packages.map((pkg, i) => (
             <Reveal key={pkg.id} delay={i * 0.1} className="h-full">
               <div
-                className={`h-full flex flex-col rounded-2xl overflow-hidden border ${
+                className={`h-full flex flex-col rounded-2xl overflow-hidden border transition-shadow duration-300 hover:shadow-xl ${
                   pkg.featured ? "border-sage-500 shadow-xl md:-translate-y-3" : "border-charcoal/10"
                 }`}
               >

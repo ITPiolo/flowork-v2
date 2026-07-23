@@ -31,6 +31,24 @@
   @apply text-xs tracking-[0.2em] uppercase text-sage-600 font-body font-medium;
 }
 
+/* Subtle press/lift feedback on primary buttons, applied globally by
+   matching the class combo used everywhere instead of touching every
+   file individually. Deliberately excludes bg-sage-500/NN opacity
+   variants (icon badges, etc.) since the match requires the literal
+   "bg-sage-500 text-cream" substring. */
+a[class*="bg-sage-500 text-cream"],
+button[class*="bg-sage-500 text-cream"] {
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+a[class*="bg-sage-500 text-cream"]:hover,
+button[class*="bg-sage-500 text-cream"]:hover {
+  transform: scale(1.02);
+}
+a[class*="bg-sage-500 text-cream"]:active,
+button[class*="bg-sage-500 text-cream"]:active {
+  transform: scale(0.96);
+}
+
 /* Vine spine used by ScrollSpine.tsx */
 .spine-path {
   fill: none;
