@@ -17,7 +17,12 @@ export default function PrivacyPolicyPage() {
 
       <Reveal delay={0.05}>
         <div className="prose prose-neutral max-w-none space-y-6 text-charcoal/70 leading-relaxed">
-          <p className="text-sm text-charcoal/40">Last updated: [insert date]</p>
+          <p className="text-sm text-charcoal/40">Last updated: 23 July 2026</p>
+
+          <p>
+            This Privacy Policy applies to flowork.ae and is operated by{" "}
+            <strong className="text-charcoal">Flowork Business Center L.L.C.</strong>
+          </p>
 
           <div>
             <h2 className="font-display text-xl text-charcoal mb-2">Information we collect</h2>

@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, MessageCircle } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import EnquiryForm from "@/components/EnquiryForm";
 
@@ -27,6 +27,17 @@ export default function ContactPage() {
               <Phone size={20} className="text-sage-500 shrink-0" />
               <a href="tel:+97145608200" className="text-charcoal/70 hover:text-sage-600">
                 +971 4 560 8200
+              </a>
+            </div>
+            <div className="flex items-center gap-3">
+              <MessageCircle size={20} className="text-sage-500 shrink-0" />
+              <a
+                href="https://wa.me/971504301555"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-charcoal/70 hover:text-sage-600"
+              >
+                +971 50 430 1555
               </a>
             </div>
             <div className="flex items-center gap-3">

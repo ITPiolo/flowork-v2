@@ -17,14 +17,16 @@ export default function TermsPage() {
 
       <Reveal delay={0.05}>
         <div className="prose prose-neutral max-w-none space-y-6 text-charcoal/70 leading-relaxed">
-          <p className="text-sm text-charcoal/40">Last updated: [insert date]</p>
+          <p className="text-sm text-charcoal/40">Last updated: 23 July 2026</p>
 
           <div>
             <h2 className="font-display text-xl text-charcoal mb-2">Acceptance of terms</h2>
             <p>
               By accessing this website or enquiring about flowork's
               workspace services, you agree to these terms. If you do not
-              agree, please do not use this site or our services.
+              agree, please do not use this site or our services. This
+              website and the services described on it are operated by{" "}
+              <strong className="text-charcoal">Flowork Business Center L.L.C.</strong>
             </p>
           </div>
 

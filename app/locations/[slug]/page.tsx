@@ -109,6 +109,24 @@ export default async function LocationPage({
         </Reveal>
       </section>
 
+      {slug === "dubai-hills" && (
+        <section className="max-w-content mx-auto px-6 lg:px-8 pt-16">
+          <Reveal>
+            <span className="eyebrow">Neighborhood</span>
+            <h2 className="font-display text-3xl mt-2 mb-4">More than an office address</h2>
+            <p className="text-charcoal/70 max-w-2xl leading-relaxed">
+              Set within Dubai Hills Estate, flowork puts you in one of Dubai's
+              most complete master communities — bicycle routes, a
+              championship golf course, community pools, landscaped
+              walkways, parks and open spaces, play areas, schools, and Dubai
+              Hills Mall are all part of the neighborhood. After a meeting,
+              you're steps from restaurants serving alcohol for a relaxed
+              catch-up with clients or your team.
+            </p>
+          </Reveal>
+        </section>
+      )}
+
       <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
         <Reveal>
           <div className="relative aspect-[21/9] rounded-2xl overflow-hidden">
