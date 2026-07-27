@@ -24,11 +24,12 @@ function fmtTime(d: Date) {
   return d.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit" });
 }
 
-// Cosmetic only — strips a trailing lone number (e.g. "Meeting Room 1"
-// -> "Meeting Room") for display, without touching the underlying
-// spaces.name value shared with the mobile app.
+// Cosmetic only — strips a trailing lone number or single letter used
+// to distinguish duplicate rows internally (e.g. "Meeting Room 1" ->
+// "Meeting Room", "Boardroom A" -> "Boardroom") for display, without
+// touching the underlying spaces.name value shared with the mobile app.
 function displayName(name: string) {
-  return name.replace(/\s+\d+$/, "");
+  return name.replace(/\s+(?:\d+|[A-Z])$/, "");
 }
 
 function spaceTypeLabel(spaceType: string) {
