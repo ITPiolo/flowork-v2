@@ -3,7 +3,6 @@ import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ScrollSpine from "@/components/ScrollSpine";
 import PageTransition from "@/components/PageTransition";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import Preloader from "@/components/Preloader";
@@ -68,7 +67,6 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <Preloader />
-        <ScrollSpine />
         <ScrollProgressBar />
         <CustomCursor />
         <EnquiryDrawerProvider>

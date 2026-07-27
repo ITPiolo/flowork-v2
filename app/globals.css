@@ -145,12 +145,3 @@ button[class*="bg-sage-500 text-cream"]:active {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-
-/* Vine spine used by ScrollSpine.tsx */
-.spine-path {
-  fill: none;
-  stroke: #7C8A6D;
-  stroke-width: 2;
-  stroke-linecap: round;
-  pathLength: 1;
-}
