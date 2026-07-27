@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/stripe";
-import {
-  DEFAULT_BOOKING_SETTINGS,
-  reachableEndMarks,
-  timeMarks,
-  type BookingSettings,
-} from "@/lib/booking";
+import { reachableEndMarks, timeMarks } from "@/lib/booking";
+import { fetchBookingSettings } from "@/lib/bookingSettings.server";
 
 // Public endpoint — creates a "pending" booking row (soft hold on the
 // slot) and a Stripe Checkout Session for it. The slot is only confirmed
@@ -43,22 +39,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Room not found" }, { status: 404 });
   }
 
-  const { data: settingsRow } = await admin
-    .from("booking_settings")
-    .select("*")
-    .eq("location_id", (space as any).location_id)
-    .maybeSingle();
-
-  const settings: BookingSettings = settingsRow
-    ? {
-        buffer_minutes: (settingsRow as any).buffer_minutes,
-        slot_increment_minutes: (settingsRow as any).slot_increment_minutes,
-        min_booking_minutes: (settingsRow as any).min_booking_minutes,
-        max_booking_minutes: (settingsRow as any).max_booking_minutes,
-        opening_time: (settingsRow as any).opening_time,
-        closing_time: (settingsRow as any).closing_time,
-      }
-    : DEFAULT_BOOKING_SETTINGS;
+  const settings = await fetchBookingSettings(admin, (space as any).location_id);
 
   if ((space as any).min_booking_minutes_override != null) {
     settings.min_booking_minutes = (space as any).min_booking_minutes_override;

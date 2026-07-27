@@ -12,15 +12,15 @@ export type ExistingBooking = {
   ends_at: string; // ISO
 };
 
-// Fallback only — matches the real booking_settings row's own column
-// defaults in Supabase, used if a location has no settings row yet. The
-// DB row (or a space's own min/max override) is always the real source
-// of truth.
+// Absolute last-resort fallback, only used if booking_settings has
+// neither a location-specific row nor a global (location_id IS NULL)
+// row — verified against the real live row, which is a single global
+// row applying to every location: 1hr minimum, 9am-6pm, 5min buffer.
 export const DEFAULT_BOOKING_SETTINGS: BookingSettings = {
   buffer_minutes: 5,
   slot_increment_minutes: 30,
-  min_booking_minutes: 30,
-  max_booking_minutes: null,
+  min_booking_minutes: 60,
+  max_booking_minutes: 240,
   opening_time: "09:00",
   closing_time: "18:00",
 };

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { DEFAULT_BOOKING_SETTINGS, type BookingSettings } from "@/lib/booking";
+import { fetchBookingSettings } from "@/lib/bookingSettings.server";
 
 // Public endpoint. Returns only what's needed to compute the tap-to-select
 // slot grid client-side: booking settings, and the start/end times of
@@ -32,22 +32,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Room not found" }, { status: 404 });
   }
 
-  const { data: settingsRow } = await admin
-    .from("booking_settings")
-    .select("*")
-    .eq("location_id", (space as any).location_id)
-    .maybeSingle();
-
-  const settings: BookingSettings = settingsRow
-    ? {
-        buffer_minutes: (settingsRow as any).buffer_minutes,
-        slot_increment_minutes: (settingsRow as any).slot_increment_minutes,
-        min_booking_minutes: (settingsRow as any).min_booking_minutes,
-        max_booking_minutes: (settingsRow as any).max_booking_minutes,
-        opening_time: (settingsRow as any).opening_time,
-        closing_time: (settingsRow as any).closing_time,
-      }
-    : DEFAULT_BOOKING_SETTINGS;
+  const settings = await fetchBookingSettings(admin, (space as any).location_id);
 
   // Per-space overrides win over location-wide settings (e.g. a shorter
   // min/max booking window for a specific space).
