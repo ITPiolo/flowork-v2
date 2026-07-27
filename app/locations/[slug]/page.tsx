@@ -66,7 +66,7 @@ export default async function LocationPage({
 
   return (
     <>
-      <section className="max-w-content mx-auto px-6 lg:px-8 pt-16 pb-8 text-center">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pt-24 pb-12 text-center">
         <Reveal>
           <h1 className="font-display text-5xl md:text-6xl">
             {location.name.split(" ").slice(0, -1).join(" ")}{" "}
@@ -92,7 +92,7 @@ export default async function LocationPage({
         </Reveal>
       </section>
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 pt-16">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pt-20">
         <Reveal>
           <span className="eyebrow">Amenities</span>
           <h2 className="font-display text-3xl mt-2 mb-8">Everything included at {location.name}</h2>
@@ -110,7 +110,7 @@ export default async function LocationPage({
       </section>
 
       {slug === "dubai-hills" && (
-        <section className="max-w-content mx-auto px-6 lg:px-8 pt-16">
+        <section className="max-w-content mx-auto px-6 lg:px-8 pt-20">
           <Reveal>
             <span className="eyebrow">Neighborhood</span>
             <h2 className="font-display text-3xl mt-2 mb-4">More than an office address</h2>
@@ -127,7 +127,7 @@ export default async function LocationPage({
         </section>
       )}
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
+      <section className="max-w-content mx-auto px-6 lg:px-8 py-24">
         <Reveal>
           <div className="relative aspect-[21/9] rounded-2xl overflow-hidden">
             <Image
@@ -142,7 +142,7 @@ export default async function LocationPage({
       </section>
 
       {location.gallery_images && location.gallery_images.length > 0 && (
-        <section className="max-w-content mx-auto px-6 lg:px-8 pb-20">
+        <section className="max-w-content mx-auto px-6 lg:px-8 pb-24">
           <Reveal>
             <span className="eyebrow">Gallery</span>
             <h2 className="font-display text-3xl mt-2 mb-8">More of {location.name}</h2>
@@ -151,13 +151,13 @@ export default async function LocationPage({
         </section>
       )}
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 pb-20 max-w-2xl">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pb-24 max-w-2xl">
         <Reveal>
           <EnquiryForm defaultLocation={location.name} ctaLabel="Enquire Now" />
         </Reveal>
       </section>
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 pb-20">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pb-24">
         <Reveal>
           <div className="rounded-2xl overflow-hidden aspect-[21/9] bg-charcoal/5">
             <iframe

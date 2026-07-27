@@ -17,7 +17,7 @@ const STATS = [
 export default function AboutPage() {
   return (
     <>
-      <section className="max-w-content mx-auto px-6 lg:px-8 pt-16 pb-10">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pt-24 pb-16">
         <Reveal>
           <span className="eyebrow">About flowork</span>
           <h1 className="font-display text-5xl md:text-6xl mt-2 max-w-2xl">
@@ -33,7 +33,7 @@ export default function AboutPage() {
         </Reveal>
       </section>
 
-      <section className="max-w-content mx-auto px-6 lg:px-8">
+      <section className="max-w-content mx-auto px-6 lg:px-8 pb-8">
         <Reveal>
           <div className="relative aspect-[21/9] rounded-2xl overflow-hidden">
             <Image
@@ -47,7 +47,7 @@ export default function AboutPage() {
         </Reveal>
       </section>
 
-      <section className="bg-charcoal py-12 sm:py-14">
+      <section className="bg-charcoal py-16 sm:py-20">
         <div className="max-w-content mx-auto px-5 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {STATS.map((s) => (
             <AnimatedStat key={s.label} value={s.value} label={s.label} />
@@ -55,7 +55,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid md:grid-cols-2 gap-12">
+      <section className="max-w-content mx-auto px-6 lg:px-8 py-24 sm:py-28 grid md:grid-cols-2 gap-12 md:gap-20">
         <Reveal>
           <h2 className="font-display text-2xl mb-4">Our approach</h2>
           <p className="text-charcoal/70 leading-relaxed">

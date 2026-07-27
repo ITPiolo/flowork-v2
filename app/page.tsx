@@ -39,7 +39,7 @@ export default async function HomePage() {
         items={["Private Office", "Coworking", "Meeting Rooms", "Virtual Office", "Podcast Room", "Dubai Hills", "Business Bay"]}
       />
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
+      <section className="max-w-content mx-auto px-6 lg:px-8 py-24 sm:py-28">
         <Reveal>
           <span className="eyebrow">What we offer</span>
           <h2 className="font-display text-3xl md:text-4xl mt-2 max-w-xl">
@@ -62,7 +62,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="relative bg-charcoal text-cream py-24 overflow-hidden soft-edge-top soft-edge-bottom">
+      <section className="relative bg-charcoal text-cream py-28 sm:py-32 overflow-hidden soft-edge-top soft-edge-bottom">
         <div className="max-w-content mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
           <Reveal>
             <span className="eyebrow text-sage-300">Dubai Hills exclusive</span>
@@ -93,7 +93,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-content mx-auto px-6 lg:px-8 py-20 grid lg:grid-cols-2 gap-12 items-stretch">
+      <section className="max-w-content mx-auto px-6 lg:px-8 py-24 sm:py-28 grid lg:grid-cols-2 gap-12 items-stretch">
         <Reveal className="relative rounded-2xl overflow-hidden min-h-[400px]">
           <Image
             src="/images/Reception-01-rd-1536x1182.jpg"
@@ -109,7 +109,7 @@ export default async function HomePage() {
       </section>
 
       {postList.length > 0 && (
-        <section className="bg-sage-50 py-20">
+        <section className="bg-sage-50 py-24 sm:py-28">
           <div className="max-w-content mx-auto px-6 lg:px-8">
             <Reveal>
               <span className="eyebrow">From the blog</span>
