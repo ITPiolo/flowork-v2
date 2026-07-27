@@ -49,16 +49,25 @@ export default function MediaLibrary() {
   async function handleUpload(fileList: FileList) {
     setUploading(true);
     const supabase = createClient();
+    const errors: string[] = [];
 
     for (const file of Array.from(fileList)) {
-      if (file.size > 15 * 1024 * 1024) continue; // skip files over 15MB
+      if (file.size > 15 * 1024 * 1024) {
+        errors.push(`${file.name}: file is over 15MB`);
+        continue;
+      }
       const ext = file.name.split(".").pop();
       const path = `pages/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      await supabase.storage.from("media").upload(path, file);
+      const { error } = await supabase.storage.from("media").upload(path, file);
+      if (error) errors.push(`${file.name}: ${error.message}`);
     }
 
     await loadFiles();
     setUploading(false);
+
+    if (errors.length > 0) {
+      window.alert(`Some files failed to upload:\n\n${errors.join("\n")}`);
+    }
   }
 
   async function handleDelete(name: string) {
