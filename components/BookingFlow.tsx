@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users } from "lucide-react";
+import { Users, Check } from "lucide-react";
 import {
   DEFAULT_BOOKING_SETTINGS,
   timeMarks,
@@ -21,6 +22,20 @@ function todayStr() {
 
 function fmtTime(d: Date) {
   return d.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit" });
+}
+
+// Cosmetic only — strips a trailing lone number (e.g. "Meeting Room 1"
+// -> "Meeting Room") for display, without touching the underlying
+// spaces.name value shared with the mobile app.
+function displayName(name: string) {
+  return name.replace(/\s+\d+$/, "");
+}
+
+function spaceTypeLabel(spaceType: string) {
+  return spaceType
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
 
 export default function BookingFlow({ locations, rooms }: { locations: Location[]; rooms: Space[] }) {
@@ -132,7 +147,7 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
           <Field label="Room">
             <select value={roomId} onChange={(e) => setRoomId(e.target.value)} className="select-input">
               {roomsForLocation.map((r) => (
-                <option key={r.id} value={r.id}>{r.name}</option>
+                <option key={r.id} value={r.id}>{displayName(r.name)}</option>
               ))}
             </select>
           </Field>
@@ -148,14 +163,51 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
         </div>
 
         {selectedRoom && (
-          <div className="flex items-center gap-3 text-sm text-charcoal/60 mb-6">
-            {selectedRoom.capacity && (
-              <span className="flex items-center gap-1.5">
-                <Users size={15} className="text-sage-500" />
-                Up to {selectedRoom.capacity}
-              </span>
+          <div className="rounded-2xl border border-charcoal/10 overflow-hidden mb-6">
+            {selectedRoom.photo_url && (
+              <div className="relative aspect-[16/9]">
+                <Image
+                  src={selectedRoom.photo_url}
+                  alt={displayName(selectedRoom.name)}
+                  fill
+                  className="object-cover"
+                />
+              </div>
             )}
-            <span>AED {selectedRoom.guest_hourly_rate_aed}/hr</span>
+            <div className="p-5">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <h3 className="font-display text-lg">{displayName(selectedRoom.name)}</h3>
+                  <p className="text-xs text-charcoal/50 uppercase tracking-wide mt-0.5">
+                    {spaceTypeLabel(selectedRoom.space_type)}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-charcoal/60">
+                  {selectedRoom.capacity && (
+                    <span className="flex items-center gap-1.5">
+                      <Users size={15} className="text-sage-500" />
+                      Up to {selectedRoom.capacity} people
+                    </span>
+                  )}
+                  <span className="font-medium text-charcoal">AED {selectedRoom.guest_hourly_rate_aed}/hr</span>
+                </div>
+              </div>
+
+              {selectedRoom.description && (
+                <p className="text-sm text-charcoal/60 mt-3">{selectedRoom.description}</p>
+              )}
+
+              {selectedRoom.inclusions && selectedRoom.inclusions.length > 0 && (
+                <ul className="mt-4 grid sm:grid-cols-2 gap-x-4 gap-y-1.5">
+                  {selectedRoom.inclusions.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm text-charcoal/70">
+                      <Check size={14} className="text-sage-500 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         )}
 
@@ -227,7 +279,7 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
         {start && end ? (
           <>
             <p className="text-sm text-cream/70 mt-2">
-              {selectedRoom?.name} &middot; {new Date(date).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
+              {selectedRoom && displayName(selectedRoom.name)} &middot; {new Date(date).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
             </p>
             <p className="text-sm text-cream/70">
               {fmtTime(start)} – {fmtTime(end)} ({durationHours.toFixed(1)}h)
