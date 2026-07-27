@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import Reveal from "@/components/Reveal";
 import BookingFlow from "@/components/BookingFlow";
-import type { Location, BookableRoom } from "@/lib/supabase/types";
+import type { Location, Space } from "@/lib/supabase/types";
 
 export const metadata = {
   title: "Book a Room | flowork",
@@ -15,18 +15,23 @@ export default async function BookPage() {
   const supabase = await createClient();
   const { data: locationsData } = await supabase.from("locations").select("*").order("display_order");
 
-  // bookable_rooms has RLS enabled with no public policy (only server
-  // routes with the service role key can read it) — use the admin
-  // client here, not the regular RLS-respecting one.
+  // spaces has RLS enabled with no public policy (only server routes with
+  // the service role key can read it) — use the admin client here, not
+  // the regular RLS-respecting one. Only show spaces that are active,
+  // toggled visible on the website, and actually have a guest rate set
+  // (null guest_hourly_rate_aed means "not sold to guests", e.g. phone
+  // booths reserved for members via the mobile app).
   const admin = createAdminClient();
   const { data: roomsData } = await admin
-    .from("bookable_rooms")
+    .from("spaces")
     .select("*")
     .eq("is_active", true)
+    .eq("show_on_website", true)
+    .not("guest_hourly_rate_aed", "is", null)
     .order("name");
 
   const locations = (locationsData ?? []) as Location[];
-  const rooms = (roomsData ?? []) as BookableRoom[];
+  const rooms = (roomsData ?? []) as Space[];
 
   return (
     <section className="max-w-content mx-auto px-6 lg:px-8 py-16">

@@ -13,31 +13,40 @@ import {
 // once Stripe confirms payment via the webhook (/api/stripe-webhook).
 // Re-validates the requested slot server-side against the DB — the
 // client-side selection UI is a convenience, not the source of truth.
+//
+// Writes to the real, shared room_bookings table (also used by
+// flowork's mobile app) — the DB's own exclusion constraint
+// (room_bookings_no_overlap) is what actually prevents double-booking
+// across both apps, this route's own check is just an earlier, friendlier
+// rejection before hitting Stripe.
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { roomId, startsAt, endsAt, fullName, email, phone, companyName } = body;
+  const { roomId: spaceId, startsAt, endsAt, fullName, email, confirmEmail, emiratesId } = body;
 
-  if (!roomId || !startsAt || !endsAt || !fullName || !email) {
+  if (!spaceId || !startsAt || !endsAt || !fullName || !email) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  }
+  if (confirmEmail && email !== confirmEmail) {
+    return NextResponse.json({ error: "Email addresses don't match" }, { status: 400 });
   }
 
   const admin = createAdminClient();
 
-  const { data: room } = await admin
-    .from("bookable_rooms")
+  const { data: space } = await admin
+    .from("spaces")
     .select("*")
-    .eq("id", roomId)
+    .eq("id", spaceId)
     .maybeSingle();
 
-  if (!room || !(room as any).is_active) {
+  if (!space || !(space as any).is_active || !(space as any).show_on_website || (space as any).guest_hourly_rate_aed == null) {
     return NextResponse.json({ error: "Room not found" }, { status: 404 });
   }
 
   const { data: settingsRow } = await admin
     .from("booking_settings")
     .select("*")
-    .eq("location_id", (room as any).location_id)
+    .eq("location_id", (space as any).location_id)
     .maybeSingle();
 
   const settings: BookingSettings = settingsRow
@@ -51,6 +60,13 @@ export async function POST(req: Request) {
       }
     : DEFAULT_BOOKING_SETTINGS;
 
+  if ((space as any).min_booking_minutes_override != null) {
+    settings.min_booking_minutes = (space as any).min_booking_minutes_override;
+  }
+  if ((space as any).max_booking_minutes_override != null) {
+    settings.max_booking_minutes = (space as any).max_booking_minutes_override;
+  }
+
   const start = new Date(startsAt);
   const end = new Date(endsAt);
   const dateStr = start.toISOString().slice(0, 10);
@@ -61,7 +77,7 @@ export async function POST(req: Request) {
   const { data: bookings } = await admin
     .from("room_bookings")
     .select("starts_at, ends_at, status, created_at")
-    .eq("room_id", roomId)
+    .eq("space_id", spaceId)
     .gte("starts_at", dayStart)
     .lte("starts_at", dayEnd);
 
@@ -85,25 +101,27 @@ export async function POST(req: Request) {
   }
 
   const hours = durationMinutes / 60;
-  const amountAed = Math.round((room as any).hourly_rate_aed * hours * 100) / 100;
+  const totalAed = Math.round((space as any).guest_hourly_rate_aed * hours * 100) / 100;
 
   const { data: booking, error } = await admin
     .from("room_bookings")
     .insert({
-      room_id: roomId,
+      space_id: spaceId,
+      user_id: null,
       starts_at: start.toISOString(),
       ends_at: end.toISOString(),
       status: "pending",
+      payment_method: "stripe",
+      total_aed: totalAed,
       full_name: fullName,
       email,
-      phone: phone || null,
-      company_name: companyName || null,
-      amount_aed: amountAed,
+      emirates_id: emiratesId || null,
     } as never)
     .select()
     .single();
 
   if (error || !booking) {
+    console.error("Booking insert failed:", error?.message);
     return NextResponse.json({ error: "Could not create booking" }, { status: 500 });
   }
 
@@ -126,9 +144,9 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: "aed",
-            unit_amount: Math.round(amountAed * 100),
+            unit_amount: Math.round(totalAed * 100),
             product_data: {
-              name: `${(room as any).name} — ${start.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}`,
+              name: `${(space as any).name} — ${start.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}`,
             },
           },
           quantity: 1,
@@ -136,7 +154,7 @@ export async function POST(req: Request) {
       ],
       metadata: { bookingId },
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/book/confirmed?booking=${bookingId}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/book?roomId=${roomId}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/book?roomId=${spaceId}`,
     });
 
     await admin

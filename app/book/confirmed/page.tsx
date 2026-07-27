@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import type { RoomBooking, BookableRoom } from "@/lib/supabase/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import type { RoomBooking, Space } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
 
@@ -11,21 +11,24 @@ export default async function BookingConfirmedPage({
   searchParams: Promise<{ booking?: string }>;
 }) {
   const { booking: bookingId } = await searchParams;
-  const supabase = await createClient();
+
+  // room_bookings and spaces have RLS enabled with no public policy —
+  // use the admin client, same as the booking API routes.
+  const admin = createAdminClient();
 
   let booking: RoomBooking | null = null;
-  let room: BookableRoom | null = null;
+  let room: Space | null = null;
 
   if (bookingId) {
-    const { data } = await supabase.from("room_bookings").select("*").eq("id", bookingId).maybeSingle();
+    const { data } = await admin.from("room_bookings").select("*").eq("id", bookingId).maybeSingle();
     booking = data as RoomBooking | null;
     if (booking) {
-      const { data: roomData } = await supabase
-        .from("bookable_rooms")
+      const { data: roomData } = await admin
+        .from("spaces")
         .select("*")
-        .eq("id", booking.room_id)
+        .eq("id", booking.space_id)
         .maybeSingle();
-      room = roomData as BookableRoom | null;
+      room = roomData as Space | null;
     }
   }
 

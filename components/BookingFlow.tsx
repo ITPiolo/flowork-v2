@@ -13,7 +13,7 @@ import {
   type BookingSettings,
   type ExistingBooking,
 } from "@/lib/booking";
-import type { Location, BookableRoom } from "@/lib/supabase/types";
+import type { Location, Space } from "@/lib/supabase/types";
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -23,7 +23,7 @@ function fmtTime(d: Date) {
   return d.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit" });
 }
 
-export default function BookingFlow({ locations, rooms }: { locations: Location[]; rooms: BookableRoom[] }) {
+export default function BookingFlow({ locations, rooms }: { locations: Location[]; rooms: Space[] }) {
   const [locationId, setLocationId] = useState(locations[0]?.id ?? "");
   const [roomId, setRoomId] = useState("");
   const [date, setDate] = useState(todayStr());
@@ -34,7 +34,7 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
   const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<Date | null>(null);
 
-  const [form, setForm] = useState({ fullName: "", email: "", phone: "", companyName: "" });
+  const [form, setForm] = useState({ fullName: "", email: "", confirmEmail: "", emiratesId: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -82,6 +82,10 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!start || !end) return;
+    if (form.email !== form.confirmEmail) {
+      setError("Email addresses don't match — your invoice depends on this being correct.");
+      return;
+    }
     setSubmitting(true);
     setError("");
 
@@ -95,8 +99,8 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
           endsAt: end.toISOString(),
           fullName: form.fullName,
           email: form.email,
-          phone: form.phone,
-          companyName: form.companyName,
+          confirmEmail: form.confirmEmail,
+          emiratesId: form.emiratesId,
         }),
       });
       const json = await res.json();
@@ -151,7 +155,7 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
                 Up to {selectedRoom.capacity}
               </span>
             )}
-            <span>AED {selectedRoom.hourly_rate_aed}/hr</span>
+            <span>AED {selectedRoom.guest_hourly_rate_aed}/hr</span>
           </div>
         )}
 
@@ -241,21 +245,23 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
               <input
                 required
                 type="email"
-                placeholder="Email"
+                placeholder="Email (invoice will be sent here)"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="form-input"
               />
               <input
-                placeholder="Phone number"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                required
+                type="email"
+                placeholder="Confirm email"
+                value={form.confirmEmail}
+                onChange={(e) => setForm({ ...form, confirmEmail: e.target.value })}
                 className="form-input"
               />
               <input
-                placeholder="Company (optional)"
-                value={form.companyName}
-                onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+                placeholder="Emirates ID or Passport number (optional)"
+                value={form.emiratesId}
+                onChange={(e) => setForm({ ...form, emiratesId: e.target.value })}
                 className="form-input"
               />
 

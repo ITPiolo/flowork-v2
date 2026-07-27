@@ -131,42 +131,55 @@ export type OccupancyUnit = {
   updated_at: string;
 };
 
-export type BookableRoom = {
+// Verified directly against the real shared Supabase project
+// (jdjnxwwdevgajxhzmjbm) via information_schema — this table is also
+// used by flowork's mobile app, so only ever ADD nullable columns here,
+// never rename/remove existing ones.
+export type Space = {
   id: string;
   location_id: string;
   name: string;
-  category: "Meeting Room" | "Boardroom" | "Podcast Room";
+  space_type: "boardroom" | "phonebooth" | "chatroom" | "meeting_room" | "podcast_room";
   capacity: number | null;
-  hourly_rate_aed: number;
   photo_url: string | null;
+  description: string | null;
+  inclusions: string[];
+  hourly_rate_aed: number | null; // member rate (mobile app)
+  guest_hourly_rate_aed: number | null; // external/website rate; null = not sold to guests
   is_active: boolean;
+  show_on_website: boolean;
+  address: string | null;
+  min_booking_minutes_override: number | null;
+  max_booking_minutes_override: number | null;
+  daily_user_limit_minutes: number | null;
   created_at: string;
 };
 
 export type BookingSettingsRow = {
   id: string;
-  location_id: string;
+  location_id: string | null;
   buffer_minutes: number;
   slot_increment_minutes: number;
   min_booking_minutes: number;
   max_booking_minutes: number | null;
   opening_time: string;
   closing_time: string;
+  created_at: string;
 };
 
 export type RoomBooking = {
   id: string;
-  room_id: string;
+  space_id: string;
+  user_id: string | null; // null = guest (website) booking
   starts_at: string;
   ends_at: string;
   status: "pending" | "confirmed" | "cancelled";
-  full_name: string;
-  email: string;
-  phone: string | null;
-  company_name: string | null;
-  amount_aed: number;
+  payment_method: "cash" | "card_terminal" | "stripe" | "apple_pay" | "invoice";
+  total_aed: number | null;
+  full_name: string | null;
+  email: string | null;
+  emirates_id: string | null;
   stripe_session_id: string | null;
-  stripe_payment_intent_id: string | null;
   created_at: string;
 };
 
@@ -217,7 +230,7 @@ export type Database = {
       occupancy_notes: { Row: OccupancyNote; Insert: Partial<OccupancyNote>; Update: Partial<OccupancyNote> };
       occupancy_share_links: { Row: OccupancyShareLink; Insert: Partial<OccupancyShareLink>; Update: Partial<OccupancyShareLink> };
       occupancy_snapshots: { Row: OccupancySnapshot; Insert: Partial<OccupancySnapshot>; Update: Partial<OccupancySnapshot> };
-      bookable_rooms: { Row: BookableRoom; Insert: Partial<BookableRoom>; Update: Partial<BookableRoom> };
+      spaces: { Row: Space; Insert: Partial<Space>; Update: Partial<Space> };
       booking_settings: { Row: BookingSettingsRow; Insert: Partial<BookingSettingsRow>; Update: Partial<BookingSettingsRow> };
       room_bookings: { Row: RoomBooking; Insert: Partial<RoomBooking>; Update: Partial<RoomBooking> };
       custom_pages: { Row: CustomPage; Insert: Partial<CustomPage>; Update: Partial<CustomPage> };

@@ -12,16 +12,16 @@ export type ExistingBooking = {
   ends_at: string; // ISO
 };
 
-// Matches flowork's actual operating hours (9am-6pm), 1hr minimum booking,
-// and 5min cleaning buffer between bookings. This is only the fallback used
-// before the real booking_settings row loads from Supabase (or if it's
-// somehow missing) — the source of truth is the DB row, admin-editable.
+// Fallback only — matches the real booking_settings row's own column
+// defaults in Supabase, used if a location has no settings row yet. The
+// DB row (or a space's own min/max override) is always the real source
+// of truth.
 export const DEFAULT_BOOKING_SETTINGS: BookingSettings = {
   buffer_minutes: 5,
   slot_increment_minutes: 30,
-  min_booking_minutes: 60,
-  max_booking_minutes: 240,
-  opening_time: "09:00",
+  min_booking_minutes: 30,
+  max_booking_minutes: null,
+  opening_time: "08:00",
   closing_time: "18:00",
 };
 

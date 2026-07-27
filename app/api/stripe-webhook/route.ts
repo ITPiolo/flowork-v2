@@ -30,12 +30,11 @@ export async function POST(req: Request) {
 
     if (bookingId) {
       const admin = createAdminClient();
+      // Note: the real room_bookings table has no stripe_payment_intent_id
+      // column (verified against the live schema) — only status changes here.
       const { error } = await admin
         .from("room_bookings")
-        .update({
-          status: "confirmed",
-          stripe_payment_intent_id: session.payment_intent ?? null,
-        } as never)
+        .update({ status: "confirmed" } as never)
         .eq("id", bookingId)
         .eq("status", "pending");
 
