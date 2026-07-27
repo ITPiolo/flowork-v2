@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Quote, ChevronLeft, ChevronRight, User } from "lucide-react";
 
 export default function TestimonialsBlock({
   eyebrow,
@@ -24,13 +24,13 @@ export default function TestimonialsBlock({
   }
 
   return (
-    <section className="bg-charcoal text-cream py-24">
+    <section className="relative bg-charcoal text-cream py-24 soft-edge-top soft-edge-bottom">
       <div className="max-w-content mx-auto px-6 lg:px-8">
         <span className="eyebrow text-sage-300">{eyebrow}</span>
         <h2 className="font-display text-3xl md:text-4xl mt-2 mb-14 max-w-xl">{heading}</h2>
 
         <div className="relative max-w-2xl">
-          <Quote className="text-sage-500/40" size={48} />
+          <Quote className="text-sage-500/30" size={72} strokeWidth={1.5} />
           <AnimatePresence mode="wait">
             <motion.div
               key={index}
@@ -40,10 +40,15 @@ export default function TestimonialsBlock({
               transition={{ duration: 0.4 }}
               className="min-h-[140px]"
             >
-              <p className="font-display text-xl md:text-2xl leading-relaxed mt-4">
+              <p className="font-display text-xl md:text-2xl leading-relaxed -mt-2">
                 &ldquo;{items[index].quote}&rdquo;
               </p>
-              <p className="mt-6 text-sm text-cream/60">{items[index].author}</p>
+              <div className="flex items-center gap-3 mt-6">
+                <span className="h-10 w-10 rounded-full bg-sage-500/15 ring-1 ring-sage-400/20 flex items-center justify-center shrink-0">
+                  <User size={16} className="text-sage-300" />
+                </span>
+                <p className="text-sm text-cream/60">{items[index].author}</p>
+              </div>
             </motion.div>
           </AnimatePresence>
 

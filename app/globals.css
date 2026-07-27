@@ -69,6 +69,50 @@ button[class*="bg-sage-500 text-cream"]:active {
   transform: scale(0.96);
 }
 
+/* Cursor-following glow, used by components/CursorGlow.tsx. The glow
+   itself is a ::before layer so it never interferes with the card's own
+   content/click targets. Off by default, fades in on hover. */
+.cursor-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(124, 138, 109, 0.18),
+    transparent 70%
+  );
+}
+.cursor-glow:hover::before {
+  opacity: 1;
+}
+
+/* Softens the hard color cut where a full-bleed dark section meets the
+   cream page background — a short gradient fade instead of an abrupt
+   edge. Apply to the section itself (needs position: relative, already
+   true for most of these since they're the section element). */
+.soft-edge-top::before,
+.soft-edge-bottom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
+  pointer-events: none;
+}
+.soft-edge-top::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(247, 245, 239, 0.5), transparent);
+}
+.soft-edge-bottom::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(247, 245, 239, 0.5), transparent);
+}
+
 /* Vine spine used by ScrollSpine.tsx */
 .spine-path {
   fill: none;

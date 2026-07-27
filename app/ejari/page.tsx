@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import Reveal from "@/components/Reveal";
 import EnquiryForm from "@/components/EnquiryForm";
+import CursorGlow from "@/components/CursorGlow";
 import type { PricingPackage } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -30,19 +31,19 @@ export default async function EjariPage() {
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {packages.map((pkg, i) => (
             <Reveal key={pkg.id} delay={i * 0.1} className="h-full">
-              <div
+              <CursorGlow
                 className={`h-full flex flex-col rounded-2xl overflow-hidden border transition-shadow duration-300 hover:shadow-xl ${
                   pkg.featured ? "border-sage-500 shadow-xl md:-translate-y-3" : "border-charcoal/10"
                 }`}
               >
                 <div
-                  className={`py-6 text-center font-display text-xl ${
+                  className={`relative z-[2] py-6 text-center font-display text-xl ${
                     pkg.featured ? "bg-sage-500 text-cream" : "bg-charcoal text-cream"
                   }`}
                 >
                   {pkg.name}
                 </div>
-                <div className="p-8 bg-white flex-1 flex flex-col">
+                <div className="relative z-[2] p-8 bg-white flex-1 flex flex-col">
                   <p className="text-center">
                     <span className="text-xs align-top mr-1">AED</span>
                     <span className="font-display text-4xl">
@@ -67,7 +68,7 @@ export default async function EjariPage() {
                     Enquire Now
                   </a>
                 </div>
-              </div>
+              </CursorGlow>
             </Reveal>
           ))}
         </div>

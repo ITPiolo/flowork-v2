@@ -57,7 +57,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="relative bg-charcoal text-cream py-24 overflow-hidden">
+      <section className="relative bg-charcoal text-cream py-24 overflow-hidden soft-edge-top soft-edge-bottom">
         <div className="max-w-content mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
           <Reveal>
             <span className="eyebrow text-sage-300">Dubai Hills exclusive</span>

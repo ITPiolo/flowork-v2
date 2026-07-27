@@ -120,7 +120,7 @@ export default function TrustBarBlock({
   const inView = useInView(sectionRef, { once: true, margin: "-60px" });
 
   return (
-    <section ref={sectionRef} className="bg-charcoal py-12 sm:py-14">
+    <section ref={sectionRef} className="relative bg-charcoal py-12 sm:py-14 soft-edge-top soft-edge-bottom">
       <div className="max-w-content mx-auto px-5 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {points.map((p, i) => (
