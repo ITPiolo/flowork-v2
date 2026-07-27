@@ -122,6 +122,18 @@ button[class*="bg-sage-500 text-cream"]:active {
   cursor: none !important;
 }
 
+/* Native <select> and date/time pickers open an OS-rendered popup our
+   custom cursor can't follow into, so give the real system cursor back
+   here — otherwise nothing would be visible at all while choosing an
+   option (see components/CustomCursor.tsx for the matching JS side). */
+.custom-cursor-active select,
+.custom-cursor-active input[type="date"],
+.custom-cursor-active input[type="time"],
+.custom-cursor-active input[type="datetime-local"],
+.custom-cursor-active input[type="month"] {
+  cursor: auto !important;
+}
+
 /* Infinite scrolling marquee band, used by components/Marquee.tsx. Two
    copies of the content sit side by side and the whole track slides
    left by exactly one copy's width, looping seamlessly. */

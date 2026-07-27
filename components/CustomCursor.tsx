@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
@@ -19,6 +19,11 @@ export default function CustomCursor() {
   const springX = useSpring(x, { damping: 28, stiffness: 380, mass: 0.4 });
   const springY = useSpring(y, { damping: 28, stiffness: 380, mass: 0.4 });
 
+  // A ref (not state) so handleMove can check it synchronously without
+  // re-subscribing the listener — avoids the cursor flashing back on
+  // the very next mousemove while still over a blocked element.
+  const blockedRef = useRef(false);
+
   const isAdmin = pathname?.startsWith("/admin");
 
   useEffect(() => {
@@ -30,12 +35,27 @@ export default function CustomCursor() {
     function handleMove(e: MouseEvent) {
       x.set(e.clientX);
       y.set(e.clientY);
-      if (!visible) setVisible(true);
+      if (!blockedRef.current) setVisible(true);
     }
 
     function handleOver(e: MouseEvent) {
       const target = e.target as HTMLElement;
-      setHovering(!!target.closest('a, button, [role="button"], input, select, textarea, .cursor-interactive'));
+
+      // Native <select> and date/time inputs open an OS-rendered popup
+      // our custom cursor can't follow into — hide it and let the real
+      // system cursor take over for these specifically, rather than
+      // leaving nothing visible.
+      const isNativePicker = !!target.closest(
+        'select, input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"]'
+      );
+      blockedRef.current = isNativePicker;
+
+      if (isNativePicker) {
+        setVisible(false);
+        return;
+      }
+
+      setHovering(!!target.closest('a, button, [role="button"], input, textarea, .cursor-interactive'));
     }
 
     function handleLeaveWindow() {
