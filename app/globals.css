@@ -8,14 +8,34 @@
   }
   body {
     @apply bg-cream text-charcoal font-body antialiased;
+    position: relative;
   }
   h1, h2, h3, h4 {
     @apply font-display;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  h1 {
+    letter-spacing: -0.02em;
   }
   :focus-visible {
     outline: 2px solid #C9A876;
     outline-offset: 3px;
   }
+}
+
+/* Very subtle grain texture over the whole site — barely visible, just
+   adds tactile depth instead of flat solid-color sections. Fixed so it
+   doesn't scroll/repeat awkwardly, and ignored for interaction. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (prefers-reduced-motion: reduce) {
