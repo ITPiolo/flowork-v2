@@ -15,6 +15,7 @@ import TrackingPixels from "@/components/TrackingPixels";
 import { EnquiryDrawerProvider } from "@/lib/EnquiryDrawerContext";
 import EnquirySidebar from "@/components/EnquirySidebar";
 import CustomCursor from "@/components/CustomCursor";
+import LiveTimeBadge from "@/components/LiveTimeBadge";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -75,6 +76,7 @@ export default async function RootLayout({
           </main>
           <Footer />
           <WhatsAppButton />
+          <LiveTimeBadge />
           <EnquirySidebar />
         </EnquiryDrawerProvider>
         <Analytics />

@@ -89,7 +89,12 @@ export default function MediaLibrary() {
     const confirmed = window.confirm(`Delete "${name}"? This can't be undone, and any page using it will show a broken image.`);
     if (!confirmed) return;
     const supabase = createClient();
-    await supabase.storage.from("media").remove([`pages/${name}`]);
+    const { error } = await supabase.storage.from("media").remove([`pages/${name}`]);
+
+    if (error) {
+      window.alert(`Delete failed: ${error.message}`);
+      return;
+    }
     setFiles(files.filter((f) => f.name !== name));
   }
 

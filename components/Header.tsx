@@ -7,7 +7,6 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import type { Location } from "@/lib/supabase/types";
 import { useEnquiryDrawer } from "@/lib/EnquiryDrawerContext";
 import MagneticButton from "@/components/MagneticButton";
-import LiveTimeBadge from "@/components/LiveTimeBadge";
 
 export default function Header({ locations }: { locations: Location[] }) {
   const [open, setOpen] = useState(false);
@@ -37,9 +36,6 @@ export default function Header({ locations }: { locations: Location[] }) {
 
   return (
     <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-charcoal/5">
-      <div className="hidden lg:flex justify-end max-w-content mx-auto px-6 lg:px-8 pt-2">
-        <LiveTimeBadge />
-      </div>
       <div className="max-w-content mx-auto flex items-center justify-between px-6 lg:px-8 h-20">
         <Link href="/" className="font-display text-2xl">
           <span className="text-sage-500 italic">flo</span>
