@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AnimatedStat from "@/components/AnimatedStat";
 import VirtualTourButton from "@/components/VirtualTourButton";
@@ -22,6 +22,28 @@ const STATS = [
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
+  const photoRef = useRef<HTMLDivElement>(null);
+
+  // Subtle parallax: the photo drifts a few pixels opposite the cursor,
+  // giving the hero a bit of depth instead of sitting completely flat.
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const springTiltX = useSpring(tiltX, { damping: 20, stiffness: 150 });
+  const springTiltY = useSpring(tiltY, { damping: 20, stiffness: 150 });
+
+  function handlePhotoMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = photoRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const relX = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+    const relY = (e.clientY - rect.top) / rect.height - 0.5;
+    tiltX.set(relX * -16);
+    tiltY.set(relY * -16);
+  }
+
+  function handlePhotoMouseLeave() {
+    tiltX.set(0);
+    tiltY.set(0);
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -112,7 +134,12 @@ export default function Hero() {
         </div>
 
         {/* Right: full, undimmed, vibrant photo — no overlay needed */}
-        <div className="relative overflow-hidden min-h-[400px]">
+        <div
+          ref={photoRef}
+          onMouseMove={handlePhotoMouseMove}
+          onMouseLeave={handlePhotoMouseLeave}
+          className="relative overflow-hidden min-h-[400px]"
+        >
           <AnimatePresence mode="sync">
             <motion.div
               key={index}
@@ -120,7 +147,8 @@ export default function Hero() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-0"
+              style={{ x: springTiltX, y: springTiltY }}
+              className="absolute -inset-4"
             >
               <Image
                 src={HERO_IMAGES[index]}
@@ -135,16 +163,14 @@ export default function Hero() {
           </AnimatePresence>
           {/* Subtle edge fade only where the two panels meet, for a
               clean seam rather than a hard cut */}
-          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-charcoal/40 to-transparent hidden lg:block" />
+          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-charcoal/40 to-transparent hidden lg:block pointer-events-none" />
         </div>
       </div>
 
-      <div className="bg-charcoal border-t border-cream/10">
-        <div className="max-w-content mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 divide-x divide-cream/10">
+      <div className="bg-charcoal border-t border-cream/10 py-10">
+        <div className="max-w-content mx-auto px-5 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {STATS.map((s) => (
-            <div key={s.label} className="py-8">
-              <AnimatedStat value={s.value} label={s.label} />
-            </div>
+            <AnimatedStat key={s.label} value={s.value} label={s.label} />
           ))}
         </div>
       </div>

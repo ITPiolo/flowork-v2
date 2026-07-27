@@ -113,6 +113,15 @@ button[class*="bg-sage-500 text-cream"]:active {
   background: linear-gradient(to top, rgba(247, 245, 239, 0.5), transparent);
 }
 
+/* Hides the native cursor only once CustomCursor.tsx has confirmed a
+   fine-pointer (real mouse) device and mounted its own — never applied
+   on touch devices, and never applied before the replacement is ready
+   (avoids a flash of no-cursor-at-all before JS runs). */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
 /* Vine spine used by ScrollSpine.tsx */
 .spine-path {
   fill: none;
