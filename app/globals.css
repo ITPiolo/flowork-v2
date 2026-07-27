@@ -122,6 +122,18 @@ button[class*="bg-sage-500 text-cream"]:active {
   cursor: none !important;
 }
 
+/* Infinite scrolling marquee band, used by components/Marquee.tsx. Two
+   copies of the content sit side by side and the whole track slides
+   left by exactly one copy's width, looping seamlessly. */
+.marquee-track {
+  width: max-content;
+  animation: marquee-scroll 22s linear infinite;
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* Vine spine used by ScrollSpine.tsx */
 .spine-path {
   fill: none;

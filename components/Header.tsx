@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import type { Location } from "@/lib/supabase/types";
 import { useEnquiryDrawer } from "@/lib/EnquiryDrawerContext";
+import MagneticButton from "@/components/MagneticButton";
 
 export default function Header({ locations }: { locations: Location[] }) {
   const [open, setOpen] = useState(false);
@@ -70,12 +71,14 @@ export default function Header({ locations }: { locations: Location[] }) {
           ))}
         </nav>
 
-        <button
-          onClick={openDrawer}
-          className="hidden lg:inline-flex items-center rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium hover:bg-sage-600 transition-colors"
-        >
-          Enquire Now
-        </button>
+        <MagneticButton className="hidden lg:inline-block">
+          <button
+            onClick={openDrawer}
+            className="inline-flex items-center rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium hover:bg-sage-600 transition-colors"
+          >
+            Enquire Now
+          </button>
+        </MagneticButton>
 
         <button
           className="lg:hidden text-charcoal"

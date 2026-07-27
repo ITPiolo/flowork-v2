@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import AnimatedStat from "@/components/AnimatedStat";
 import VirtualTourButton from "@/components/VirtualTourButton";
+import MagneticButton from "@/components/MagneticButton";
 
 const HERO_IMAGES = [
   "/images/Reception-01-rd-1536x1182.jpg",
@@ -93,18 +94,22 @@ export default function Hero() {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="flex flex-wrap gap-3 mt-10"
           >
-            <Link
-              href="/#enquire"
-              className="inline-flex items-center rounded-full bg-sage-500 text-cream px-7 py-3.5 text-sm font-medium hover:bg-sage-600 hover:scale-[1.02] transition-all"
-            >
-              Enquire Now
-            </Link>
-            <Link
-              href="/locations"
-              className="inline-flex items-center rounded-full border border-cream/25 text-cream px-7 py-3.5 text-sm font-medium hover:bg-cream/10 transition-colors"
-            >
-              Explore Locations
-            </Link>
+            <MagneticButton>
+              <Link
+                href="/#enquire"
+                className="inline-flex items-center rounded-full bg-sage-500 text-cream px-7 py-3.5 text-sm font-medium hover:bg-sage-600 hover:scale-[1.02] transition-all"
+              >
+                Enquire Now
+              </Link>
+            </MagneticButton>
+            <MagneticButton>
+              <Link
+                href="/locations"
+                className="inline-flex items-center rounded-full border border-cream/25 text-cream px-7 py-3.5 text-sm font-medium hover:bg-cream/10 transition-colors"
+              >
+                Explore Locations
+              </Link>
+            </MagneticButton>
           </motion.div>
 
           <motion.div

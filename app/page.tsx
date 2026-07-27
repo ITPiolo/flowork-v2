@@ -6,6 +6,7 @@ import ServiceCard from "@/components/ServiceCard";
 import EnquiryForm from "@/components/EnquiryForm";
 import BlogPreview from "@/components/BlogPreview";
 import PuckRenderer from "@/components/PuckRenderer";
+import Marquee from "@/components/Marquee";
 import type { Service, BlogPost, CustomPage } from "@/lib/supabase/types";
 
 export const revalidate = 60;
@@ -33,6 +34,10 @@ export default async function HomePage() {
           this page in /admin/pages.
         </div>
       )}
+
+      <Marquee
+        items={["Private Office", "Coworking", "Meeting Rooms", "Virtual Office", "Podcast Room", "Dubai Hills", "Business Bay"]}
+      />
 
       <section className="max-w-content mx-auto px-6 lg:px-8 py-20">
         <Reveal>
