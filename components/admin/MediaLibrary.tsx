@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { compressImage } from "@/lib/compressImage";
 import { Upload, Copy, Trash2, Check } from "lucide-react";
 
 type MediaFile = {
@@ -51,15 +52,25 @@ export default function MediaLibrary() {
     const supabase = createClient();
     const errors: string[] = [];
 
-    for (const file of Array.from(fileList)) {
-      if (file.size > 15 * 1024 * 1024) {
-        errors.push(`${file.name}: file is over 15MB`);
+    for (const rawFile of Array.from(fileList)) {
+      if (rawFile.size > 40 * 1024 * 1024) {
+        errors.push(`${rawFile.name}: file is over 40MB, too large even to compress`);
         continue;
       }
+
+      let file = rawFile;
+      try {
+        file = await compressImage(rawFile);
+      } catch (err) {
+        // If compression fails for any reason, fall back to uploading
+        // the original rather than blocking the upload entirely.
+        console.error(`Compression failed for ${rawFile.name}:`, err);
+      }
+
       const ext = file.name.split(".").pop();
       const path = `pages/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error } = await supabase.storage.from("media").upload(path, file);
-      if (error) errors.push(`${file.name}: ${error.message}`);
+      if (error) errors.push(`${rawFile.name}: ${error.message}`);
     }
 
     await loadFiles();

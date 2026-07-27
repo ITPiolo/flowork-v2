@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { compressImage } from "@/lib/compressImage";
 
 export default function PuckImageField({
   value,
@@ -14,13 +15,21 @@ export default function PuckImageField({
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleFile(file: File) {
+  async function handleFile(rawFile: File) {
     setError(null);
-    if (file.size > 15 * 1024 * 1024) {
-      setError("File too large (max 15MB). Compress it first.");
+    if (rawFile.size > 40 * 1024 * 1024) {
+      setError("File too large (max 40MB, even before compression).");
       return;
     }
     setUploading(true);
+
+    let file = rawFile;
+    try {
+      file = await compressImage(rawFile);
+    } catch (err) {
+      console.error(`Compression failed for ${rawFile.name}:`, err);
+    }
+
     const supabase = createClient();
     const ext = file.name.split(".").pop();
     const path = `pages/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
