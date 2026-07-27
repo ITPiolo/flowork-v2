@@ -21,7 +21,7 @@ export const DEFAULT_BOOKING_SETTINGS: BookingSettings = {
   slot_increment_minutes: 30,
   min_booking_minutes: 30,
   max_booking_minutes: null,
-  opening_time: "08:00",
+  opening_time: "09:00",
   closing_time: "18:00",
 };
 
