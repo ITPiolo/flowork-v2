@@ -17,16 +17,20 @@ export default function MediaLibrary() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [copiedName, setCopiedName] = useState<string | null>(null);
+  const [listError, setListError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function loadFiles() {
     setLoading(true);
+    setListError(null);
     const supabase = createClient();
     const { data, error } = await supabase.storage
       .from("media")
       .list("pages", { limit: 200, sortBy: { column: "created_at", order: "desc" } });
 
-    if (!error && data) {
+    if (error) {
+      setListError(error.message);
+    } else if (data) {
       const mapped = data
         .filter((f) => f.name !== ".emptyFolderPlaceholder")
         .map((f) => {
@@ -123,9 +127,15 @@ export default function MediaLibrary() {
         />
       </div>
 
+      {listError && (
+        <p className="text-sm text-red-600 mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+          Couldn&rsquo;t load the media list: {listError}
+        </p>
+      )}
+
       {loading ? (
         <p className="text-sm text-charcoal/40">Loading...</p>
-      ) : files.length === 0 ? (
+      ) : files.length === 0 && !listError ? (
         <p className="text-sm text-charcoal/40">
           No images uploaded yet. Upload one above, or images uploaded via
           the page builder will show up here automatically.
