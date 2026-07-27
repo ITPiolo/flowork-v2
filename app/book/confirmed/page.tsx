@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
+import ConfettiBurst from "@/components/ConfettiBurst";
 import type { RoomBooking, Space } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +39,7 @@ export default async function BookingConfirmedPage({
     <section className="max-w-content mx-auto px-6 lg:px-8 py-24 text-center">
       {isConfirmed ? (
         <>
+          <ConfettiBurst />
           <CheckCircle2 size={48} className="text-sage-500 mx-auto mb-4" />
           <h1 className="font-display text-3xl md:text-4xl">Booking confirmed</h1>
           {room && booking && (

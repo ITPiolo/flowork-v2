@@ -7,6 +7,7 @@ import Link from "next/link";
 import AnimatedStat from "@/components/AnimatedStat";
 import VirtualTourButton from "@/components/VirtualTourButton";
 import MagneticButton from "@/components/MagneticButton";
+import ScrambleText from "@/components/ScrambleText";
 
 const HERO_IMAGES = [
   "/images/Reception-01-rd-1536x1182.jpg",
@@ -75,7 +76,7 @@ export default function Hero() {
             transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="font-display text-5xl md:text-6xl text-cream leading-[1.05] tracking-tight"
           >
-            Workspaces that elevate your business
+            <ScrambleText text="Workspaces that elevate your business" />
           </motion.h1>
 
           <motion.p

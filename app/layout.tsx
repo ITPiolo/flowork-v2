@@ -16,6 +16,7 @@ import { EnquiryDrawerProvider } from "@/lib/EnquiryDrawerContext";
 import EnquirySidebar from "@/components/EnquirySidebar";
 import CustomCursor from "@/components/CustomCursor";
 import LiveTimeBadge from "@/components/LiveTimeBadge";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default async function RootLayout({
         </a>
         <Preloader />
         <ScrollSpine />
+        <ScrollProgressBar />
         <CustomCursor />
         <EnquiryDrawerProvider>
           <Header locations={(locations ?? []) as Location[]} />
