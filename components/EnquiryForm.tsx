@@ -182,7 +182,7 @@ export default function EnquiryForm({
           background: transparent;
           color: #f7f5ef;
           padding: 0.6rem 0;
-          font-size: 0.9rem;
+          font-size: 1rem;
           outline: none;
         }
         .form-input::placeholder {

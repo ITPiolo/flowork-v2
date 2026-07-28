@@ -340,7 +340,7 @@ export default function BookingFlow({ locations, rooms }: { locations: Location[
           width: 100%;
           border-radius: 0.5rem;
           padding: 0.6rem 0.75rem;
-          font-size: 0.875rem;
+          font-size: 1rem;
           outline: none;
         }
         .select-input {
