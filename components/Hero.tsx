@@ -34,6 +34,7 @@ export default function Hero() {
   const springTiltY = useSpring(tiltY, { damping: 20, stiffness: 150 });
 
   function handlePhotoMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!window.matchMedia("(pointer: fine)").matches) return;
     const rect = photoRef.current?.getBoundingClientRect();
     if (!rect) return;
     const relX = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
@@ -144,6 +145,7 @@ export default function Hero() {
           ref={photoRef}
           onMouseMove={handlePhotoMouseMove}
           onMouseLeave={handlePhotoMouseLeave}
+          onTouchEnd={handlePhotoMouseLeave}
           className="relative overflow-hidden min-h-[400px]"
         >
           <AnimatePresence mode="sync">

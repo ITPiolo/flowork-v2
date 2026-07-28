@@ -19,7 +19,15 @@ export default function MagneticButton({
   const springX = useSpring(x, { damping: 15, stiffness: 200, mass: 0.5 });
   const springY = useSpring(y, { damping: 15, stiffness: 200, mass: 0.5 });
 
+  // Touch devices fire one synthetic mousemove on tap with no real
+  // "mouse leave" after — skip the pull entirely there rather than risk
+  // a button stuck offset after tapping it.
+  function isFinePointer() {
+    return typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches;
+  }
+
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!isFinePointer()) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     const relX = e.clientX - (rect.left + rect.width / 2);
@@ -28,7 +36,7 @@ export default function MagneticButton({
     y.set(relY * 0.35);
   }
 
-  function handleMouseLeave() {
+  function reset() {
     x.set(0);
     y.set(0);
   }
@@ -37,7 +45,8 @@ export default function MagneticButton({
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={reset}
+      onTouchEnd={reset}
       style={{ x: springX, y: springY }}
       className={`inline-block ${className}`}
     >
