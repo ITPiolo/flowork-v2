@@ -55,7 +55,7 @@ export default function CursorGlow({
       onMouseMove={handleMouseMove}
       onMouseLeave={resetTilt}
       onTouchEnd={resetTilt}
-      className={`cursor-glow relative transition-transform duration-300 ease-out will-change-transform ${className}`}
+      className={`cursor-glow relative transition-transform duration-300 ease-out will-change-transform active:scale-[0.97] ${className}`}
     >
       {children}
     </div>
