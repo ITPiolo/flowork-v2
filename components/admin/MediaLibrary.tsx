@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { compressImage } from "@/lib/compressImage";
-import { Upload, Copy, Trash2, Check } from "lucide-react";
+import { Upload, Copy, Trash2, Check, CheckSquare, Square, ClipboardCopy } from "lucide-react";
 
 type MediaFile = {
   name: string;
@@ -18,6 +18,8 @@ export default function MediaLibrary() {
   const [uploading, setUploading] = useState(false);
   const [copiedName, setCopiedName] = useState<string | null>(null);
   const [listError, setListError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [copiedAll, setCopiedAll] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function loadFiles() {
@@ -26,7 +28,9 @@ export default function MediaLibrary() {
     const supabase = createClient();
     const { data, error } = await supabase.storage
       .from("media")
-      .list("pages", { limit: 200, sortBy: { column: "created_at", order: "desc" } });
+      // 1000 instead of the old 200 — a bulk upload of many space/logo
+      // photos was hitting the old limit and getting silently cut off.
+      .list("pages", { limit: 1000, sortBy: { column: "created_at", order: "desc" } });
 
     if (error) {
       setListError(error.message);
@@ -96,6 +100,11 @@ export default function MediaLibrary() {
       return;
     }
     setFiles(files.filter((f) => f.name !== name));
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.delete(name);
+      return next;
+    });
   }
 
   function copyUrl(file: MediaFile) {
@@ -104,9 +113,38 @@ export default function MediaLibrary() {
     setTimeout(() => setCopiedName(null), 1500);
   }
 
+  function toggleSelect(name: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === files.length) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(files.map((f) => f.name)));
+    }
+  }
+
+  function copySelectedUrls() {
+    const urls = files
+      .filter((f) => selected.has(f.name))
+      .map((f) => f.url)
+      .join("\n");
+    navigator.clipboard.writeText(urls);
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 1500);
+  }
+
+  const allSelected = files.length > 0 && selected.size === files.length;
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
         <div>
           <h1 className="font-display text-2xl">Media Library</h1>
           <p className="text-sm text-charcoal/50 mt-1">
@@ -132,6 +170,28 @@ export default function MediaLibrary() {
         />
       </div>
 
+      {files.length > 0 && (
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          <button
+            onClick={toggleSelectAll}
+            className="flex items-center gap-2 text-sm border border-charcoal/15 rounded-lg px-3 py-2 hover:bg-sage-50"
+          >
+            {allSelected ? <CheckSquare size={15} className="text-sage-600" /> : <Square size={15} />}
+            {allSelected ? "Deselect all" : `Select all (${files.length})`}
+          </button>
+
+          {selected.size > 0 && (
+            <button
+              onClick={copySelectedUrls}
+              className="flex items-center gap-2 text-sm rounded-lg bg-sage-500 text-cream px-3 py-2 hover:bg-sage-600"
+            >
+              {copiedAll ? <Check size={15} /> : <ClipboardCopy size={15} />}
+              {copiedAll ? "Copied!" : `Copy ${selected.size} URL${selected.size > 1 ? "s" : ""}`}
+            </button>
+          )}
+        </div>
+      )}
+
       {listError && (
         <p className="text-sm text-red-600 mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
           Couldn&rsquo;t load the media list: {listError}
@@ -147,33 +207,49 @@ export default function MediaLibrary() {
         </p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {files.map((file) => (
-            <div key={file.name} className="group relative rounded-xl overflow-hidden border border-charcoal/10 bg-white">
-              <div className="relative aspect-square bg-charcoal/5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-2">
-                <p className="text-xs text-charcoal/50 truncate">{file.name}</p>
-              </div>
-              <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          {files.map((file) => {
+            const isSelected = selected.has(file.name);
+            return (
+              <div
+                key={file.name}
+                className={`group relative rounded-xl overflow-hidden border bg-white ${
+                  isSelected ? "border-sage-500 ring-2 ring-sage-500/40" : "border-charcoal/10"
+                }`}
+              >
                 <button
-                  onClick={() => copyUrl(file)}
-                  className="h-9 w-9 rounded-full bg-white flex items-center justify-center hover:bg-sage-50"
-                  title="Copy URL"
+                  onClick={() => toggleSelect(file.name)}
+                  className="absolute top-2 left-2 z-10 h-6 w-6 rounded-md bg-white/90 border border-charcoal/15 flex items-center justify-center hover:bg-sage-50"
+                  title={isSelected ? "Deselect" : "Select"}
                 >
-                  {copiedName === file.name ? <Check size={16} className="text-sage-600" /> : <Copy size={16} />}
+                  {isSelected ? <CheckSquare size={14} className="text-sage-600" /> : <Square size={14} className="text-charcoal/40" />}
                 </button>
-                <button
-                  onClick={() => handleDelete(file.name)}
-                  className="h-9 w-9 rounded-full bg-white flex items-center justify-center hover:bg-red-50"
-                  title="Delete"
-                >
-                  <Trash2 size={16} className="text-red-500" />
-                </button>
+
+                <div className="relative aspect-square bg-charcoal/5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-2">
+                  <p className="text-xs text-charcoal/50 truncate">{file.name}</p>
+                </div>
+                <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => copyUrl(file)}
+                    className="h-9 w-9 rounded-full bg-white flex items-center justify-center hover:bg-sage-50"
+                    title="Copy URL"
+                  >
+                    {copiedName === file.name ? <Check size={16} className="text-sage-600" /> : <Copy size={16} />}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(file.name)}
+                    className="h-9 w-9 rounded-full bg-white flex items-center justify-center hover:bg-red-50"
+                    title="Delete"
+                  >
+                    <Trash2 size={16} className="text-red-500" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
