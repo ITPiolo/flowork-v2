@@ -1,10 +1,35 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import NewsletterForm from "@/components/NewsletterForm";
 
 export default function Footer() {
+  const ref = useRef<HTMLElement>(null);
+
+  // Measures the footer's real (content-driven) height and exposes it
+  // as a CSS variable, so the page content wrapper above can reserve
+  // exactly that much scroll space — see the --footer-height usage in
+  // app/layout.tsx. This is what makes the footer feel "revealed"
+  // rather than just appearing at the bottom like any other section:
+  // it's pinned in place the whole time, sitting behind the page.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const setHeight = () => {
+      document.documentElement.style.setProperty("--footer-height", `${el.offsetHeight}px`);
+    };
+    setHeight();
+
+    const observer = new ResizeObserver(setHeight);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <footer>
+    <footer ref={ref} className="lg:fixed lg:bottom-0 lg:left-0 lg:right-0 lg:z-0">
       <div className="relative bg-charcoal text-cream overflow-hidden">
         <svg
           className="absolute right-0 top-0 h-full w-1/2 opacity-20 pointer-events-none"

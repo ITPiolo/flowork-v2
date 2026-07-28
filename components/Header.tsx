@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import type { Location } from "@/lib/supabase/types";
 import { useEnquiryDrawer } from "@/lib/EnquiryDrawerContext";
@@ -10,7 +10,25 @@ import MagneticButton from "@/components/MagneticButton";
 
 export default function Header({ locations }: { locations: Location[] }) {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const { openDrawer } = useEnquiryDrawer();
+  const { scrollY } = useScroll();
+
+  // Hides the header on scroll-down (past a small threshold, so it
+  // doesn't twitch on tiny scrolls), reveals it again on scroll-up —
+  // gives more screen room while reading, without losing nav access.
+  useMotionValueEvent(scrollY, "change", (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    const diff = current - previous;
+    if (open) return; // never hide while the mobile menu is open
+    if (current < 80) {
+      setHidden(false);
+    } else if (diff > 0) {
+      setHidden(true);
+    } else if (diff < 0) {
+      setHidden(false);
+    }
+  });
 
   const nav = [
     { label: "Home", href: "/" },
@@ -35,7 +53,11 @@ export default function Header({ locations }: { locations: Location[] }) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-charcoal/5">
+    <motion.header
+      animate={{ y: hidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-charcoal/5"
+    >
       <div className="max-w-content mx-auto flex items-center justify-between px-6 lg:px-8 h-20">
         <Link href="/" className="font-display text-2xl">
           <span className="text-sage-500 italic">flo</span>
@@ -134,6 +156,6 @@ export default function Header({ locations }: { locations: Location[] }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

@@ -70,10 +70,17 @@ export default async function RootLayout({
         <ScrollProgressBar />
         <CustomCursor />
         <EnquiryDrawerProvider>
-          <Header locations={(locations ?? []) as Location[]} />
-          <main id="main-content">
-            <PageTransition>{children}</PageTransition>
-          </main>
+          {/* relative + bg-cream + reserved bottom margin is what makes
+              the fixed footer feel "revealed" rather than just present —
+              see components/Footer.tsx for the height measurement side. */}
+          <div
+            className="relative z-10 bg-cream lg:mb-[var(--footer-height,0px)]"
+          >
+            <Header locations={(locations ?? []) as Location[]} />
+            <main id="main-content">
+              <PageTransition>{children}</PageTransition>
+            </main>
+          </div>
           <Footer />
           <WhatsAppButton />
           <LiveTimeBadge />
