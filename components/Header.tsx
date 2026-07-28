@@ -102,17 +102,26 @@ export default function Header({ locations }: { locations: Location[] }) {
             className="lg:hidden overflow-hidden border-t border-charcoal/5 bg-cream"
           >
             <nav aria-label="Mobile navigation" className="px-6 py-4 flex flex-col gap-4">
-              {nav.map((item) => (
-                <Link
+              {nav.map((item, i) => (
+                <motion.div
                   key={item.label}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="text-charcoal/80 text-sm"
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {item.label}
-                </Link>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="text-charcoal/80 text-sm"
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
               ))}
-              <button
+              <motion.button
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: nav.length * 0.04, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => {
                   setOpen(false);
                   openDrawer();
@@ -120,7 +129,7 @@ export default function Header({ locations }: { locations: Location[] }) {
                 className="inline-flex justify-center rounded-full bg-sage-500 text-cream px-5 py-2.5 text-sm font-medium"
               >
                 Enquire Now
-              </button>
+              </motion.button>
             </nav>
           </motion.div>
         )}

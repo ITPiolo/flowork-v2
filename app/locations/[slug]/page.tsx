@@ -127,6 +127,23 @@ export default async function LocationPage({
         </section>
       )}
 
+      {slug === "vision-tower-business-bay" && (
+        <section className="max-w-content mx-auto px-6 lg:px-8 pt-20">
+          <Reveal>
+            <span className="eyebrow">Neighborhood</span>
+            <h2 className="font-display text-3xl mt-2 mb-4">Right in Dubai's business pulse</h2>
+            <p className="text-charcoal/70 max-w-2xl leading-relaxed">
+              Vision Tower sits in the heart of Business Bay, minutes from
+              Downtown Dubai, the Burj Khalifa, and DIFC — with the Dubai
+              Water Canal, waterfront promenades, and Business Bay Metro
+              Station all within easy reach. It's a neighborhood built for
+              client meetings that end with a walk along the canal or dinner
+              at one of the area's waterfront restaurants.
+            </p>
+          </Reveal>
+        </section>
+      )}
+
       <section className="max-w-content mx-auto px-6 lg:px-8 py-24">
         <Reveal>
           <div className="relative aspect-[21/9] rounded-2xl overflow-hidden">
